@@ -1,0 +1,766 @@
+@font-face {
+    font-family: ardagh;
+    src: url(http://dolansofcavan.com/wp-content/themes/nearnothing/fonts/ardagh.ttf);
+}
+
+/* CSS RESET */
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+body {
+	line-height: 1;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+a {
+	text-decoration: none;
+	color: black;
+}
+a:visited {
+	color: inherit;
+}
+a:hover {
+	color: red;
+}
+*:focus {
+    outline: none;
+}
+em {
+	font-style: italic;
+}
+html { font-size: 62.5%; 
+} 
+body { font-size: 1.4rem; } /* =14px */
+h1   { font-size: 2.4rem; } /* =24px */
+
+body {
+  font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+  color: #000;
+  margin: 0px;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  overflow-x: hidden;
+}
+html { 
+  margin-top: 0px !important;
+}
+#wpadminbar {
+  z-index: 99999 !important;
+}
+#fp_fullscreen_image{
+	position: fixed;
+	top: 0px;
+	bottom: 0px;
+	left: 0px;
+	right: 0px;
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background-size: cover;
+	overflow-x: hidden;
+	background-position: center center;
+}
+h1{
+	font-family: 'Lato', sans-serif;
+	font-weight: 900;
+	color: white;
+	text-transform: uppercase;
+	font-size: 5em;
+	line-height: 1.25em; 
+}
+h3{
+	max-width: 600px;
+	margin: auto;
+	color: white;
+	font-size: 1.5em;
+	line-height: 1.5em; 
+
+}
+h4{
+	font-family: 'Lato', sans-serif;
+	font-weight: 900;
+	color: white;
+	text-transform: uppercase;
+	font-size: 1.75em;
+	line-height: 1.25em; 
+
+}
+
+.current_page_item {
+	/*text-decoration: underline !important;*/
+	color: white !important;
+	border-bottom: 5px solid #000000;
+}
+#logo{
+	position: absolute;
+	width: 6rem;
+	height: 8rem;
+	background: url('http://dolansofcavan.com/wp-content/themes/nearnothing/images/dolan_icon.png') no-repeat center; 
+	background-size: 6rem 6rem;
+	text-indent: -999px;
+	z-index: 500;
+	cursor: pointer;
+	transition: all 0.5s;
+}
+
+body.body_home #logo {
+	position: absolute;
+	width: 6rem;
+	height: 8rem;
+	background: url('http://dolansofcavan.com/wp-content/themes/nearnothing/images/dolan_icon_white.png') no-repeat center; 
+	background-size: 6rem 6rem;
+	text-indent: -999px;
+	z-index: 500;
+	cursor: pointer;
+	transition: all 0.5s;
+}
+
+#site_title_desktop{
+	position: absolute;
+	height: 8rem;
+	transition: all 0.5s;
+	left: 9rem;
+	font-family: 'Lato', sans-serif;
+	font-weight: 900;
+	text-transform: uppercase;
+	font-size: 1.6rem;
+	line-height: 8rem;
+}
+body.home #site_title_desktop {
+	color: white !important;
+}
+#site_title{
+	display: none;
+}
+
+/* Move the header down when you are logged in... */
+#navigation{
+	width: 100%;
+	box-sizing: border-box;
+	padding: 0px 30px 0px 25px;
+	height: 8rem;
+	z-index: 100;
+	position: relative;
+}
+/*.body_home > #navigation{
+	background: -moz-linear-gradient(top, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0) 100%); 
+	background: -webkit-linear-gradient(top, rgba(0,0,0,0.65) 0%,rgba(0,0,0,0) 100%); 
+	background: linear-gradient(to bottom, rgba(0,0,0,0.65) 0%,rgba(0,0,0,0) 100%); 
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a6000000', endColorstr='#00000000',GradientType=0 ); 
+}*/
+
+.body_home > #navigation{
+background: 
+    linear-gradient(
+      to top,
+      rgba(0, 0, 0, 0),
+      rgba(0, 0, 0, 0.6)
+    ),
+    url(skyscrapers.jpg);
+}
+
+#navigation ul{
+	font-family: 'Lato', sans-serif;
+	font-weight: 900;
+	text-transform: uppercase;
+	float: right;
+	overflow: hidden;
+	right: 0px;
+	bottom: 0;
+	width: 100%;
+	padding: 0px;
+	margin-top: 15px;
+	/*height: 8rem;
+	line-height: 6rem; /*to accomodate the border top of active*/
+	text-align: right;
+	-webkit-transition: all 0.5s;
+	-moz-transition: all 0.5s;
+	-o-transition: all 0.5s;
+	transition: all 0.5s;
+
+}
+#navigation li{
+	font-size: 1.6rem;
+	display: inline-block;
+	margin-left: 2rem;
+	height: 25px;
+}
+#navigation li a {
+	color: black; 
+	display: block;
+}
+
+body.home > #navigation li a {
+	color: white; 
+	display: block;
+}
+#navigation li a:hover {
+	color: black;
+	/*border-top: 10px solid #000000;*/
+}
+.current_page_item a:hover {
+	color: black;
+	border-top: 0px !important;
+}
+
+.body_home #navigation li a:hover,
+.body_reunion #navigation li a:hover {
+	color: white;
+}
+
+#cover-up{
+	opacity: 0;
+	height: 0px;
+}
+#doormat{
+	width: 100%;
+	height: 100%;
+	/*background-color: rgba(225, 59, 7, 0.5);*/
+	text-align: center;
+	position: absolute;
+	z-index:-1;
+}
+#doormat .miniature{
+	font-size: .4em;
+	margin-top: 0vh;
+	line-height: 1em; 
+	display: block;
+}
+.greeting_container{
+	width: 80%;
+	max-width: 800px;
+	position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
+}
+.down_arrow{
+	background-image: url('images/down_arrow.png');
+	margin: 82vh auto 0px auto;
+	width: 100%;
+	height: 70px;
+	position: relative;
+	background-position: 50%;
+	background-repeat: no-repeat;
+}
+.greeting_container a:link,
+.greeting_container a:visited {
+	color: white;
+}
+
+.fullscreen{
+	width: 100vh; 
+	width: 100%; 
+	height: 120%; 
+	height: 120vh; 
+	text-align: center; 
+	position: relative;
+	padding-bottom: 10%;
+}
+.halfscreen{
+	width: 100%; 
+	height: 50%; 
+	text-align: center; 
+	position: relative;
+}
+.arrow h1{
+	font-size: 3em !important;
+	transition-property: all;
+	transition-duration: 0.5s;
+}
+.greeting_container:hover .arrow_right h1{
+	margin-left: 50px;
+}
+.greeting_container:hover .arrow_down h1{
+	margin-top: 50px;
+}
+.greeting_container:hover .arrow_left h1{
+	margin-right: 50px;
+}
+
+/*#footer{
+	position: relative;
+	display: block;
+	bottom: 0;
+	width: 100%;
+	height: 20px;
+	text-align: right;
+}*/
+.body_relatives {
+  background: none;
+}
+.body_photos {
+  background: none; 
+}
+.body_home {
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+
+.body_map {
+	/*background: url('https://upload.wikimedia.org/wikipedia/commons/1/15/Mt._Everest_from_Gokyo_Ri_November_5,_2012.jpg') no-repeat center top fixed; */
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background-size: cover;
+}
+#map_container{
+	/*clip-path: circle(110vh at 50vw 50vh);
+	-webkit-clip-path: circle(110vh at 50vw 50vh);*/
+	position:absolute; 
+	top: 0;
+	left: 0;
+	margin-left: 0px;
+	margin-top: 0px;
+	width: 100%;
+	height: 100vh;
+	border-radius: 0px;
+	overflow: hidden;
+	-webkit-transition: all 0.5s;
+	-moz-transition: all 0.5s;
+	-o-transition: all 0.5s;
+	transition: all 0.5s;
+}
+#map h1{
+	color: black;
+	text-transform: uppercase;
+	font-weight: 900;
+}
+#map_container.clipped{
+	clip-path: circle(100px at 50vw 50vh);
+	-webkit-clip-path: circle(100px at 50vw 50vh);
+}
+#map_container.reduced{
+	top: 50%;
+	left: 50%;
+	width: 200px;
+	height: 200px;
+	margin-left: -100px;
+	margin-top: -100px;
+	overflow: hidden;
+	border-radius: 100px;
+}
+
+#map { 
+	height: 100%; 
+	width: 100%; 
+	top: 0;
+	left: 0;
+	position: absolute !important;
+	bottom: 0;
+}
+#map.reduced {
+	width: 200px;
+	height: 200px;
+	border-radius: 100px;
+}
+mapboxgl-canvas-container{
+	width: 200px;
+	height: 200px;
+}
+#map_container.reduced canvas.mapboxgl-canvas{
+	position: static !important;
+	width: 200px;
+	height: 200px;
+}
+div.mapboxgl-ctrl-attrib.mapboxgl-ctrl{
+	display: none;
+}
+.mapboxgl-popup-content{
+	fon
+	text-transform: uppercase;
+	text-align: center;
+	padding: 10px 10px 10px !important;
+	font-size: 1.5em;
+}
+.mapboxgl-popup-content h1{
+	font-size: 1.5em;
+	font-weight: bold;
+	margin-bottom: 5px;
+}
+.mapboxgl-popup-close-button{
+	display: none !important;
+}
+.leaflet-popup-content-wrapper{
+	font-family: "Times New Roman", Baskerville, "Palatino Linotype", Palatino, "Century Schoolbook L", serif;
+	text-align: center !important;
+	text-transform: uppercase;
+}
+.leaflet-popup-content-wrapper h1{
+	font-size: 20px !important;
+	line-height: 25px !important;
+	font-weight: bold;
+	margin-bottom: 0px !important;
+	text-transform: none;
+
+}
+a.leaflet-popup-close-button{
+	display: none;
+}
+.leaflet-control-container{
+	display: none;
+}
+
+.marker-cluster-small div,
+.marker-cluster-medium div,
+.marker-cluster-large div {
+	background-color: rgba(215, 19, 56, 0.8) !important;
+}
+.marker-cluster-small,
+.marker-cluster-medium,
+.marker-cluster-large {
+	background-color: rgba(215, 19, 56, 0.3) !important;
+}
+div.map_pic{
+	display: inline-block;
+	width: 150px;
+	height: 150px;
+	margin-bottom: 10px;
+}
+.map_pic img{
+	width: 150px;
+	height: 150px;
+}
+
+
+#content{
+  width: 100%;
+}
+.parent {
+	background-color: black;
+	color: white;
+	text-transform: uppercase;
+	font-weight: bold;
+	display: inline-block;
+	width: 98%;
+	height: auto;
+	padding: 2%;
+	margin-bottom: 4px;
+	margin-top: 20px;
+}
+.relatives_formation ul{
+	padding: 0px;
+	margin: 0px;
+}
+.relatives_formation li{
+	display: inline-block;
+	width: 29%;
+	height: auto;
+	padding: 2%;
+	margin-bottom: 4px;
+	margin-right: 3px;
+}
+.parent p,
+.relatives_formation p{
+	line-height: 108px;
+	float:left;
+	margin-left:20px;
+}
+.parent img,
+.relatives_formation img{
+	float:left;
+}
+.parent img{
+	border-radius: 54px;
+}
+/*.male {
+	background-color: #bcd7e6 !important;
+}
+.female {
+	background-color: #efc6e6 !important;
+}*/
+.dead {
+	background-color: gray !important;
+}
+.father {
+	background-color: black!important;
+	color: white !important;
+	text-transform: uppercase;
+	font-weight: bold;
+	display: inline-block;
+	width: 98% !important;
+	height: auto;
+	padding: 2%;
+	margin-bottom: 4px;
+}
+
+.select_relative{
+	line-height: 25px;
+}
+#media-gallery {
+  width: auto;
+  margin: auto;
+  padding: 0px 30px 30px 30px;
+}
+#media-gallery a img {
+  width: 18%;
+  padding: 1%;
+  height: auto;
+}
+/* //////////Post Content////////// */
+#post_content{
+	width: 80%;
+	max-width: 800px;
+	margin-right: auto;
+	margin-left: auto;
+	margin-top: 60px;
+	font-size: 1em;
+}
+#post_content h1{
+	color: black;
+	margin-bottom: 3rem;
+	font-size: 5rem;
+	line-height: 5rem;
+}
+#post_content p{
+	font-size: 2rem;
+	line-height: 3rem;
+	margin-bottom: 1rem;
+}
+.post_date {
+	font-family: 'Lato', sans-serif;
+	font-weight: 700;
+	line-height: 1.25rem;
+	margin-bottom: 0.5rem;
+}
+/* //////////Reunion Page////////// */
+.body_reunion {
+  background: url('http://dolansofcavan.com/wp-content/uploads/2016/04/slieve.jpg') no-repeat center top fixed; 
+  background-opacity: 0.2;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+
+.announcement {
+	color: white;
+	position: fixed;
+	top: 0px;
+	bottom: 0px;
+	left: 0px;
+	right: 0px;
+	height: auto;
+	padding: 20%; 
+	background-color: rgba(152, 29, 70, 0.75);
+	margin-right: auto;
+	margin-left: auto;
+	text-align: center;
+}
+/*#footer{
+	position: fixed;
+	bottom: 10px;
+	right: 30px;
+	text-transform: uppercase;
+	font-size: .25rem;
+}*/
+/* //////////Mobile Styles////////// */
+@media (max-width: 980px) {
+h1{
+	font-size: 3rem;
+	line-height: 3.5rem;
+	margin-bottom: 1rem;
+}
+h2{
+	font-size: 1.5em;
+}
+h3{
+	font-size: 1em;
+}
+body.body_home #logo,
+#logo {
+	position: absolute;
+	top: 0px;
+	left: 12px;
+	width: 5rem;
+	height: 5rem;
+	background: url('http://dolansofcavan.com/wp-content/themes/nearnothing/images/dolan_icon.png') no-repeat center; 
+	background-size: 40px 40px;
+	text-indent: -999px;
+	z-index: 500;
+	cursor: pointer;
+	transition: all 0.5s;
+}
+#hamburger_menu{
+	width: 5rem;
+	height: 5rem;
+	background: url('http://dolansofcavan.com/wp-content/themes/nearnothing/images/hamb.png') no-repeat center; 
+	background-size: 40px 40px;
+	position: absolute;
+	top: 0px;
+	right: 12px;
+	cursor: pointer;
+	transition: all 0.5s;
+}
+#site_title{
+	width: 150px;
+	height: 5rem;
+	position: absolute;
+	top: 0px;
+	left: 50%;
+	margin-left: -75px;
+	font-family: 'Lato', sans-serif;
+	text-align: center;
+	text-transform: uppercase;
+	font-size: 2rem;
+	font-weight: 900;
+	line-height: 5rem;
+	text-color: black;
+	display: block;
+}
+#site_title_desktop{
+	display: none !important;
+}
+
+#navigation{
+	width: 100%;
+	height: 5rem;
+	background-color: white;
+	z-index: 100;
+	position: fixed;
+	top: 0px;
+	padding: 5rem 0px 0px 0px;
+}
+.body_home > #navigation{
+	background: white;
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a6000000', endColorstr='#00000000',GradientType=0 ); /* IE6-9 */
+}
+
+body.logged-in #navigation{
+	top: 45px;
+}
+#navigation ul{
+	position: fixed;
+	top: 5rem;
+	background-color: white;
+	width: 100%;
+	height: 0rem;
+	line-height: 5rem;
+	text-align: left;
+}
+body.logged-in #navigation ul{
+	top: 9.5rem;
+}
+#navigation ul{
+	top: 3rem;
+}
+#navigation li{
+	margin-left: 0px;
+	text-indent: 20px;
+	display: block;
+	width: 100%;
+	border-bottom: thin solid #000000;
+	height: 50px;
+}
+#navigation li a {
+	color: black; 
+	display: block;
+}
+body.home > #navigation li a {
+	color: black; 
+	display: block;
+}
+
+#navigation li a:hover {
+	color: white;
+	background-color: black;
+	border-top: 0px;
+}
+.current_page_item {
+	border-top: 0px solid #000000;
+}
+.greeting_container h4{
+	font-size: 1.5em;
+}
+.greeting_container h1{
+	font-size: 2.5em;
+	line-height: 1em;
+}
+
+#cover-up{
+	opacity: 0;
+	transition: opacity .5s ease-out;
+    -moz-transition: opacity .5s ease-out;
+    -webkit-transition: opacity .5s ease-out;
+    -o-transition: opacity .5s ease-out;
+	position: fixed;
+	top: 0px;
+	right: 0px;
+	left: 0px;
+	bottom: 0px;
+	width: 100%;
+	height: 0%;
+	background-color: black;
+}
+#media-gallery {
+  width: auto;
+  margin: auto;
+  padding: 12px;
+}
+
+#media-gallery a img {
+  width: 46%;
+  padding: 2%;
+  height: auto;
+}
+#post_content{
+	width: 85%;
+}
+#post_content h1{
+	font-size: 3rem;
+	line-height: 3.25rem;
+}
+#post_content p{
+	font-size: 1.75rem;
+	line-height: 2.5rem;
+}
+
+
+}
+@media (max-width: 580px) {
+  #media-gallery a img {
+	width: 98%;
+	padding: 1%;
+	height: auto;
+  }
+}
