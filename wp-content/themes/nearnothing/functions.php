@@ -55,7 +55,7 @@ $hello = 'hello world';
 
 /* sidebar */
 if ( function_exists('register_sidebar') )
-    register_sidebar(array('description' => 'Left Sidebar'));
+    register_sidebar(array('id' => 'sidebar-1'));
 
 /* nav menus */
 if ( function_exists( 'register_nav_menu' ) ) {
@@ -79,13 +79,20 @@ function wptp_add_tags_to_attachments() {
 
 
 /*GET THE IMAGES*/
-function get_images_from_media_library() {
+function get_images_from_media_library($total) {
     $args = array(
         'post_type' => 'attachment',
         'post_mime_type' =>'image',
         'post_status' => 'inherit',
-		'posts_per_page' => -1,
-		'numberposts' => -1,
+		'meta_query' => array(
+			array(
+			 'key' 		=> '_fp_checkbox',
+			 'value'   	=> 1,
+			 'compare' 	=> '='
+			)
+		),
+		'posts_per_page' => ($total)?$total:-1,
+		'numberposts' => ($total)?$total:-1,
         'orderby' => 'random'
     );
     $query_images = new WP_Query( $args );

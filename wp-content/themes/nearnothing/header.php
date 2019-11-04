@@ -29,6 +29,8 @@ $body_class;
 		$body_class = 'body_map';
 	} else if($pagename == 'reunion'){
 		$body_class = 'body_reunion';
+	} else{
+		$body_class = '';
 	}
 
 ?>

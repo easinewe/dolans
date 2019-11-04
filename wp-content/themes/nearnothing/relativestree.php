@@ -10,8 +10,6 @@
 
 <?php get_header(); ?>
 
-<!--<link href="<?php echo get_template_directory_uri(); ?>/relatives_css/bootstrap.css" rel="stylesheet">-->
-<!--<link href="<?php echo get_template_directory_uri(); ?>/relatives_css/bootstrap-responsive.css" rel="stylesheet">-->
 <link href="<?php echo get_template_directory_uri(); ?>/relatives_css/tree.css" rel="stylesheet" type="text/css">
 
 <?php
@@ -159,6 +157,9 @@
 					'dob' => $dob
 				);	
 		}
+		
+			var_dump('boosh');
+			var_dump($fam_multi);
 		
 	  ?>
       

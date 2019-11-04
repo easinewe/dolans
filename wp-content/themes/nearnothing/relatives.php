@@ -121,7 +121,10 @@ li.no {
 }
 </style>
 
-
+<?php 
+	var_dump('boosh');
+	var_dump($fam_list_1);
+?>
 
   <div id='content'>
     <div id="media-gallery">

@@ -15,90 +15,79 @@
     </style>
 
     <?php get_header(); ?>
-      <div id=fp_fullscreen_image></div>
 
-      <div id="doormat"></div>
-      
-      <div class="down_arrow"></div>
 
-      <div id="welcome_slide" class="fullscreen" style="background-color: rgba(30,30,30,0.82);">
-            <div class="greeting_container">
-              <h4>The Dolan Family Website</h4>
-              <h1 id="galic_greeting" class="fp_greeting">Tráthnóna maith duit</h1>
-              <span class="arrow arrow_down"><h1>&#8595;</h1></arrow>
-            </div>
-      </div>
-      
-      <div id="family_tree_slide" class="fullscreen" style="background-color: rgba(165, 38, 41, 0.73);">
-            <a href="<? echo get_permalink( get_page_by_title( 'family tree' ) ); ?>">
-              <div class="greeting_container">
-                <h4>DOLAN FAMILY TREE</h4>
-                <h1 class="fp_greeting">Your Roots are Showing...</h1>
-                <span class="arrow arrow_right"><h1>&#8594;</h1></arrow>
-              </div>
-            </a>
-      </div>
-      
-      <div id="reunion_slide" class="fullscreen" style="background-color: rgba(30,30,30,0.82);">
-            <a href="<? echo get_permalink( get_page_by_title( 'reunion' ) ); ?>">
-              <div class="greeting_container">
-                <h4>Dolan Reunion in Ireland</h4>
-                <h1>Sunday<br/>August 21<br/>2016</h1>
-                <span class="arrow arrow_right"><h1>&#8594;</h1></arrow>
-              </div>
-            </a>  
-		</div>
+	<style>
+		body{
+			background-color: black;
+			height: 3000vh;
+		}
+		.face{
+			position: absolute;
+  			box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+			max-width: 20vw;
+		}
+		div.titlebox {
+    		height: 100vh;
+			width: 100vw;
+    		position: fixed 
+		}
+		div.titlebox h1 {
+			margin: 0;
+			color: white;
+			font-size: 10vw;
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			margin-right: -50%;
+			transform: translate(-50%, -100%); 
+			z-index: 1;
+			opacity: 1;
+		}
+		#counter{
+			position: fixed;
+			top: 50%;
+			color: white;
+		}
+	</style>	
+	
+	<div class=titlebox>
+	  <h1 id="title">DOLAN</h1>
+	</div>
+	
+	<?php
+	$images = get_images_from_media_library(300);
 
-      <div id="photos_slide" class="fullscreen" style="background-color: rgba(165, 38, 41, 0.73);">
-            <a href="<? echo get_permalink( get_page_by_title( 'photos' ) ); ?>">
-              <div class="greeting_container">
-                <h4>Photos of the Dolans</h4>
-                <h1 class="fp_greeting">CHEESE!</h1>
-                <span class="arrow arrow_right"><h1>&#8594;</h1></arrow>
-              </div>
-            </a>
-      </div>
-      
-      <div id="memories_slide" class="fullscreen" style="background-color: rgba(30,30,30,0.82);">
-            <a href="<? echo get_permalink( get_page_by_title( 'memories' ) ); ?>">
-              <div class="greeting_container">
-                <h4>DOLAN FAMILY Memories</h4>
-                <h1 class="fp_greeting">READ ALL ABOUT IT</h1>
-                <span class="arrow arrow_right"><h1>&#8594;</h1></arrow>
-              </div>
-            </a>
-      </div>
+	foreach($images as $image){
+		$rand_top 	= rand(100,3000);
+		$rand_left 	= rand(10,90);
+		$rand_z		= rand(-1,1);
+		$src 		= wp_get_attachment_image_src((int)$image,'full')[0];
+		if($src){
+			echo '<img class="face" src="'.$src.'" style="top:'.$rand_top.'vh; left:'.$rand_left.'vw; z-index:'.$rand_z.';" >';
+		}
 
-      
-      <div id="tree" class="fullscreen" style="background-color: rgba(165, 38, 41, 0.73);">
-            <a href="<? echo get_permalink( get_page_by_title( 'map' ) ); ?>">
-              <div class="greeting_container">
-                <h4>DOLAN FAMILY MAP</h4>
-                <h1 class="fp_greeting">THEY'RE EVERYWHERE!</h1>
-                <span class="arrow arrow_right"><h1>&#8594;</h1></arrow>
-              </div>
-            </a>
-      </div>
-      
-      <div id="tree" class="fullscreen" style="background-color: rgba(30,30,30,0.82);">
-            <a href="http://dolansofcavan.com/wp-admin/">
-              <div class="greeting_container">
-                <h4>SIGN IN</h4>
-                <h1 class="fp_greeting">ADD RELATIVES, PHOTOS, OR MEMORIES</h1>
-                <span class="arrow arrow_right"><h1>&#8594;</h1></arrow>
-              </div>
-            </a>
-      
-      </div>
-            <div id="tree" class="fullscreen" style="background-color: rgba(165, 38, 41, 0.73);">
-            <a href="mailto:eamonnfitzmaurice@gmail.com">
-              <div class="greeting_container">
-                <h4>NEED MORE INFORMATION</h4>
-                <h1 class="fp_greeting">CONTACT US</h1>
-                <span class="arrow arrow_left"><h1>&#8592;</h1></arrow>
-              </div>
-            </a>
-      </div>
+	}
+	?>
+		
+	<script>
+	
+		//get random number
+		function generateRandom(){
+			var min=50; 
+    		var max=80;  
+    		var random = Math.floor(Math.random() * (+max - +min)) + +min; 
+			
+			return random
+		}
+		
+		function bringToFront(){
+			this.style.zIndex = 100;
+			console.log(this);
+		}
+				
+				
+	</script>	
 
 	
 
