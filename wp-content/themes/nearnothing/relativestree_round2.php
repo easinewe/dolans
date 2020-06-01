@@ -27,6 +27,11 @@
         height: 80px;
         cursor: pointer;
     }
+    .roundtree li > div {
+        opacity: 1.0;
+        transition: opacity .25s linear;
+    }
+
     .roundtree li label{
         opacity: 0;
         position: fixed;
@@ -34,12 +39,20 @@
         left: 50%;
     }
 
+    body.connections .roundtree li > div{
+        opacity: 0.2;
+    }
+
+    body.connections .roundtree li.linked > div{
+        opacity: 1.0;
+    }
+
     .roundtree li div{
         width: 80px;
         height: 80px;
         border-radius: 40px;
         overflow: hidden;
-        background-color: red;
+        background-color: black;
     }
 
     .roundtree li img{
@@ -68,10 +81,17 @@
         height: 40px !important;
     }
 
-    #relative_name{
-        position: fixed;
-        bottom: 50px;
-        left: 50px;
+    #rel_label{
+        position: absolute;
+        background-color: black;
+        color: white;
+        transform: translateY(-50%);
+    }
+
+    #rel_label span{
+        padding: 10px;
+        height: 40px;
+        line-height: 40px;
     }
 
 </style>	
@@ -237,25 +257,26 @@ function branchOut($branch){
     $generation     = $branch['generation'];
     $generation_i   = $generation_totals_copy[$generation]['count'];
 
-
     //distribute angles based on total members in generation
-    $angle   = 360/($generation_totals[$generation]['count']);
-    $angle   = $angle * $generation_i;
+    $angle              = 360/($generation_totals[$generation]['count'] + 1);
+    $angle              = $angle * $generation_i;
 
-    //echo $branch['full_name'].': '.$branch['generation'].' '.$generation_totals_copy[$generation]['count'].'<br/>';
+    //determine generation circle width
+    $gen_translation    = ( ($generation_totals[$generation]['count'] + 1) * 18.75 )/ $generation;
 
     //reduce by 1
     $generation_totals_copy[$generation]['count'] = $generation_totals_copy[$generation]['count']-1;
 
         //print out data
-        echo '<li data-order="'.$generation.'" data-lineage="'.$branch['blood_relative_id'].'" data-name="'.$branch['full_name'].'" style="transform: rotate('.$angle.'deg) translate('.(($branch['generation'])*230).'%) rotate(-'.$angle.'deg)">';
-        echo '<label>'.$fam_member['full_name'].'</label>';
-        if($branch['spouse_id']){
-            echo '<span class="spouse" style="transform: rotate('.$angle.'deg) translate(40px) rotate(-'.$angle.'deg)">';
-            echo get_the_post_thumbnail( $branch['spouse_id'], 'thumbnail' );
-            echo '</span>';
-        }
-        echo '<div>'.get_the_post_thumbnail( $branch['id'], 'thumbnail' ).'</div>';
+        echo '<li class="relative" data-order="'.$generation.'" data-lineage="'.$branch['blood_relative_id'].'" data-name="'.$branch['full_name'].'" data-id="'.$branch['id'].'" style="transform: rotate('.$angle.'deg) translate('.(($branch['generation']) * $gen_translation  ).'%) rotate(-'.$angle.'deg)">';
+            echo '<label>'.$fam_member['full_name'].'</label>';
+            if($branch['spouse_id']){
+                echo '<span class="spouse" style="transform: rotate('.$angle.'deg) translate(40px) rotate(-'.$angle.'deg)">';
+                echo get_the_post_thumbnail( $branch['spouse_id'], 'thumbnail' );
+                echo '</span>';
+            }
+            echo '<div>'.get_the_post_thumbnail( $branch['id'], 'thumbnail' ).'</div>';
+        echo '<hr style =style="transform: rotate('.$angle.'deg) translate('.(($branch['generation']) * $gen_translation  ).'%) rotate(-'.$angle.'deg)">';
         echo '</li>';
 
 
@@ -285,15 +306,68 @@ function branchOut($branch){
 
         </ul>
 
-        <div id="relative_name">the name</div>
-
     </div>
 
-
+<div id="rel_label">Hello!</div>
 
 <?php
     //var_dump($generation_totals_copy);
     //var_dump($generation_totals);
 ?>
+
+<script>
+
+    var relatives  = [].slice.call( document.getElementsByClassName( "relative" ) ),
+        rel_label  = document.getElementById('rel_label');
+
+    function showLineage(){
+        id = this.getAttribute('data-id');
+
+        for (var i = 0; i < relatives.length; i++) {
+            lineage = relatives[i].getAttribute('data-lineage');
+
+            //remove class
+            relatives[i].classList.remove('linked');
+            relatives[i].classList.remove('unlinked');
+            document.body.classList.add('connections');
+
+            //add class if related
+            if( (lineage) && (lineage == id) ){
+                relatives[i].classList.add('linked');
+            }
+        }
+
+        //add class to this relative
+        rel_label.innerHTML = '<span>'+(this.getAttribute('data-name'))+'</span>';
+        this.classList.add('linked');
+    }
+
+    function hideLineage(){
+        document.body.classList.remove('connections');
+        rel_label.innerHTML = '';
+        console.log('hide');
+    }
+
+
+    window.addEventListener('mousemove', function(event){
+        x = event.clientX;
+        y = event.clientY;
+        if ( typeof x !== 'undefined' ){
+            rel_label.style.left = x + 50 + "px";
+            rel_label.style.top = y + 0 + "px";
+        }
+    }, false);
+
+    //get relative info on hover
+    for (var i = 0; i < relatives.length; i++) {
+        relatives[i].addEventListener('mouseover', showLineage, false);
+        relatives[i].addEventListener('mouseout', hideLineage, false);
+
+    }
+
+    document.body.addEventListener('click', hideLineage, true);
+
+
+</script>
 
 <?php get_footer(); ?>
