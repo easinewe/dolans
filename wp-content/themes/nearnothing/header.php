@@ -58,7 +58,6 @@ if($pagename == 'map'){
     </ul>
   </div>
   <div id="cover-up"></div>
-  
-  
+
   
   

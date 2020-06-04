@@ -81,6 +81,21 @@ jQuery(document).ready(function($){
 
 	}
 
+
+
+	//MASONRY
+
+	// init Masonry after all images have loaded
+	var $grid = $('.grid').imagesLoaded( function() {
+		$grid.masonry({
+			columnWidth: '.grid-sizer',
+			gutter: '.gutter-sizer',
+			itemSelector: '.grid-item',
+			percentPosition: true
+		});
+	});
+
+
 });
 
 

@@ -22,11 +22,6 @@
 			background-color: black;
 			height: 3000vh;
 		}
-		.face{
-			position: absolute;
-  			box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-			max-width: 20vw;
-		}
 		div.titlebox {
     		height: 100vh;
 			width: 100vw;

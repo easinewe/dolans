@@ -4,38 +4,34 @@ $hello = 'hello world';
 
 
 	function themeslug_enqueue_style() {
-		wp_enqueue_style('mapbox_style','https://api.tiles.mapbox.com/mapbox-gl-js/v0.16.0/mapbox-gl.css');
+		if( is_page_template('Map') ){
+			wp_enqueue_style('mapbox_style','https://api.tiles.mapbox.com/mapbox-gl-js/v0.16.0/mapbox-gl.css');
+		}
 	}
 	
 	function themeslug_enqueue_script() {
-		wp_enqueue_script('mapbox', 'https://api.tiles.mapbox.com/mapbox-gl-js/v0.16.0/mapbox-gl.js');
+		if( is_page_template('Map') ){
+			wp_enqueue_script('mapbox', 'https://api.tiles.mapbox.com/mapbox-gl-js/v0.16.0/mapbox-gl.js');
+		}
 	}
 	
 	function wpdocs_scripts_method() {
 		wp_enqueue_script( 'main', get_stylesheet_directory_uri() . '/js/main.js', array( 'jquery' ) );
+		wp_enqueue_script( 'masonry', get_stylesheet_directory_uri() . '/js/masonry.pkgd.min.js', array( 'jquery' ) );
+		wp_enqueue_script( 'images_loaded', get_stylesheet_directory_uri() . '/js/imagesloaded.pkgd.min.js', array( 'masonry' ) );
 	}
 	
-	add_action( 'wp_enqueue_scripts', 'themeslug_enqueue_style' );
-	add_action( 'wp_enqueue_scripts', 'themeslug_enqueue_script' );
-	add_action( 'wp_enqueue_scripts', 'wpdocs_scripts_method' );
-
-
-
 	function load_mapboxjs_files() {
-	  
-		//we can just enqueu the last one because it is dependent on the first
+		//we can just enqueue the last one because it is dependent on the first
 		wp_register_script('mapbox_js','https://api.mapbox.com/mapbox.js/v2.4.0/mapbox.js');
 		wp_register_script('marker_cluster','https://api.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v0.4.0/leaflet.markercluster.js', array('mapbox_js'));
 	  	wp_enqueue_script( 'clusters', get_stylesheet_directory_uri() . '/js/clusterfuck.js', array( 'marker_cluster' ) );
 
-	  if ( is_page( 'map' ) ) {
-		wp_enqueue_script('clusters');
-	  }
+		if( is_page_template('Map') ){
+			wp_enqueue_script('clusters');
+		}
 	}
-	
-	add_action( 'wp_enqueue_scripts', 'load_mapboxjs_files' );
 
-	
 	function register_mapbox_js_stylesheets() {
 		  wp_register_style('mapbox_js_css','https://api.mapbox.com/mapbox.js/v2.4.0/mapbox.css');
 		  wp_register_style('marker_cluster_css','https://api.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v0.4.0/MarkerCluster.css');
@@ -48,6 +44,11 @@ $hello = 'hello world';
 		  wp_enqueue_style('marker_cluster_css_def');
 		}
 	}
+
+	add_action( 'wp_enqueue_scripts', 'themeslug_enqueue_style' );
+	add_action( 'wp_enqueue_scripts', 'themeslug_enqueue_script' );
+	add_action( 'wp_enqueue_scripts', 'wpdocs_scripts_method' );
+	add_action( 'wp_enqueue_scripts', 'load_mapboxjs_files' );
 	add_action( 'init', 'register_mapbox_js_stylesheets' ); // should I use wp_print_styles hook instead?
 	add_action( 'wp_enqueue_scripts', 'add_mapbox_js_stylesheets' );
 
@@ -108,16 +109,16 @@ function get_images_from_media_library($total) {
 function display_images_from_media_library() {
 
 	$imgs = get_images_from_media_library();
-	$html = '<div id="media-gallery">';
+	$html = '';
 	
 	foreach($imgs as $img) {
 		
 		$image_categories = get_the_category_list( $img );
 		$thumb_img = get_post( $img ); // Get post by ID
 		$image_description = $thumb_img->post_content;
-		$image_link = wp_get_attachment_link($img, 'thumbnail_l');
+		$image_link = wp_get_attachment_link($img, 'medium');
 		
-		$image_link_description = str_replace('<a href', '<a title="'.$image_description.'" href', $image_link);
+		$image_link_description = str_replace('<a href', '<a class="grid-item" title="'.$image_description.'" href', $image_link);
 		
 		$exclusion_status = get_post_meta($img, '_exclusion_checkbox', true);
 			
@@ -127,12 +128,30 @@ function display_images_from_media_library() {
 			}
 	}
 	
-	$html .= '</div>';
-	
-	return $html;
-	//var_dump($imgs);
+
+	//return $html;
+	var_dump($imgs);
 }
 
+function dolan_get_images(){
+	$output = array();
+	$image_ids = get_images_from_media_library();
+
+	foreach($image_ids as $img_id){
+		$image 			= get_post($img_id);
+		$image_src 	  	= wp_get_attachment_image_src($img_id, 'medium');
+		$image_src_lg 	= wp_get_attachment_image_src($img_id, 'large');
+
+		$output[] = array(
+			'id' 			=> $img_id,
+			'url'			=> $image_src[0],
+			'url_lg'		=> $image_src_lg[0],
+			'description'	=> $image->post_content,
+		);
+	}
+
+	return $output;
+}
 
 
 /*SHOW THE FRONT PAGE IMAGES*/
@@ -226,6 +245,61 @@ $args = array(
 	}
 	  return $gender_list; 
 }
+
+//get category slugs
+function dolan_get_categories(){
+
+	$output = array();
+	$categories = get_categories();
+
+	foreach( $categories as $category ){
+		$output[] = array(
+			'name' => $category->name,
+			'slug' => $category->slug
+			);
+	}
+
+	return $output;
+
+}
+
+//get posts categorized
+function dolan_get_posts($category_slug = null){
+
+	$output = array();
+
+	$args = array(
+		'numberposts' => -1,
+		'offset' => 0,
+		'category_name' => $category_slug,
+		'category' => 0,
+		'orderby' => 'post_date',
+		'order' => 'DESC',
+		'post_type' => 'post',
+		'post_status' => 'publish',
+		'suppress_filters' => true,
+	);
+
+	$query = new WP_Query( $args );
+
+	// fill the array
+	while( $query->have_posts() ){
+		$query->the_post();
+		$id = get_the_ID();
+		$output[] = array(
+			'id' 		=> $id,
+			'title'		=> get_the_title($id),
+			'date'		=> get_the_date(),
+			'author'	=> 'the author of this post',
+			'category'  => $category[0]->name,
+			'link'		=> get_the_permalink(),
+		);
+	}
+
+	return $output;
+
+}
+
 
 function get_relatives_by_id() {
 $args = array(
