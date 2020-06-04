@@ -14,6 +14,10 @@
             <h3>2000 -</h3>
             <?php the_content(); ?>
 
+            <?php
+                $post_info = get_post();
+                var_dump($post_info);
+            ?>
 
         <?php endwhile; ?>
         <?php endif; ?>

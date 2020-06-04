@@ -1,7 +1,4 @@
 <?php
-global $hello;
-$hello = 'hello world';
-
 
 	function themeslug_enqueue_style() {
 		if( is_page_template('Map') ){
@@ -37,6 +34,7 @@ $hello = 'hello world';
 		  wp_register_style('marker_cluster_css','https://api.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v0.4.0/MarkerCluster.css');
 		  wp_register_style('marker_cluster_css_def','https://api.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v0.4.0/MarkerCluster.Default.css');
 	}
+
 	function add_mapbox_js_stylesheets(){
 		if ( is_page('map') ){ // using page slug
 		  wp_enqueue_style('mapbox_js_css');
@@ -52,7 +50,6 @@ $hello = 'hello world';
 	add_action( 'init', 'register_mapbox_js_stylesheets' ); // should I use wp_print_styles hook instead?
 	add_action( 'wp_enqueue_scripts', 'add_mapbox_js_stylesheets' );
 
-   
 
 /* sidebar */
 if ( function_exists('register_sidebar') )
@@ -226,24 +223,34 @@ $args = array(
 }
 
 function divide_the_genders_by_id($gender) {
-$args = array(
-      'post_type' 	=> 'relative',
-	  'meta_key' 	=> 'relative_name_gender',                    
-	  'meta_value' 	=> $gender    
-       );
-    $men = new WP_Query( $args );
-	$gender_list = array();
-  // If we are in a loop we can get the post ID easily
-	if( $men->have_posts() ) {
-      while( $men->have_posts() ) {
-        $men->the_post();
-		$gendered['id'] = get_the_ID(); 
-		$gendered['name'] = get_post_meta( get_the_ID(), 'relative_name_first', true );
-		$gendered['name_last'] = get_post_meta( get_the_ID(), 'relative_name_last', true );
-	  array_push($gender_list, $gendered);          
-      }
+	$output = array();
+
+	$args = array(
+		'post_type' 		=> 'relative',
+		'meta_key' 			=> 'relative_name_gender',
+		'meta_value' 		=> $gender,
+		'orderby' 			=> 'title',
+    	'order'   			=> 'ASC',
+		'posts_per_page' 	=> -1,
+		'numberposts' 		=> -1,
+
+	);
+
+	$men = get_posts( $args );
+
+	if( $men ) {
+		foreach( $men as $man ) {
+			$id = $man->ID;
+			$output[] = array(
+				"id"		=> 	$id,
+				"name" 		=>  get_post_meta( $id, 'relative_name_first', true ),
+				"name_last" =>  get_post_meta( $id, 'relative_name_last', true ),
+			);
+		}
 	}
-	  return $gender_list; 
+
+	return $output;
+
 }
 
 //get category slugs
@@ -302,27 +309,30 @@ function dolan_get_posts($category_slug = null){
 
 
 function get_relatives_by_id() {
-$args = array(
-      'post_type' 	=> 'relative',
-	  'orderby' 		=> 'title',
-	  'order'   		=> 'ASC',
-	  		'posts_per_page' => -1,
-		'numberposts' => -1,
+	$output = array();
 
-       );
-    $relatives = new WP_Query( $args );
-	$relatives_list = array();
-  // If we are in a loop we can get the post ID easily
-	if( $relatives->have_posts() ) {
-      while( $relatives->have_posts() ) {
-        $relatives->the_post();
-		$relative['id'] = get_the_ID(); 
-		$relative['name'] = get_post_meta( get_the_ID(), 'relative_name_first', true );
-		$relative['name_last'] = get_post_meta( get_the_ID(), 'relative_name_last', true );
-	  array_push($relatives_list, $relative);          
-      }
+	$args = array(
+		'post_type' 		=> 'relative',
+		'orderby' 			=> 'title',
+		'order'   			=> 'ASC',
+		'posts_per_page' 	=> -1,
+		'numberposts' 		=> -1,
+	);
+
+    $relatives = get_posts( $args );
+
+	if( $relatives ) {
+		foreach( $relatives as $rel ) {
+			$id = $rel->ID;
+			$output[] = array(
+				"id"		=> 	$id,
+				"name" 		=>  get_post_meta( $id, 'relative_name_first', true ),
+				"name_last" =>  get_post_meta( $id, 'relative_name_last', true ),
+			);
+		}
 	}
-	  return $relatives_list; 
+
+	return $output;
 }
 
 /////*GET MAP DATA*/////
@@ -385,7 +395,6 @@ function get_family_map_data() {
 	return $maplocations;
 }
 
-
 function get_family_cluster_map_data() {
 				  
 				  $args = array(
@@ -442,8 +451,6 @@ function get_family_cluster_map_data() {
 	return $maplocations;
 }
 
-
-
 function save_map_data() {
 	$map_json = get_template_directory().'/mapfamdata.geojson';
 	$fp = fopen( $map_json, 'w');
@@ -486,7 +493,7 @@ function my_custom_post_relatives() {
     'description'   => 'Holds information for each relative',
     'public'        => true,
     'menu_position' => 5,
-	'menu_icon' 		=> 'dashicons-admin-users',
+	'menu_icon' 	=> 'dashicons-admin-users',
     'supports'      => array( 'title', 'thumbnail', 'excerpt', 'comments' ),
     'has_archive'   => true,
   );
@@ -560,7 +567,6 @@ function relative_name_box_content( $post ) {
 		echo '</select>';
     }
 }
-
 
 add_action( 'save_post', 'relative_name_box_save' );
 
@@ -732,13 +738,14 @@ function parental_units_box() {
 }
 
 function parental_units_box_content( $post ) {
-    wp_nonce_field( plugin_basename( __FILE__ ), 'parental_units_box_content_nonce' );
+
+	wp_nonce_field( plugin_basename( __FILE__ ), 'parental_units_box_content_nonce' );
     $meta_values_mother = get_post_meta($post->ID, 'parental_units_mother', true);
     $meta_values_father = get_post_meta($post->ID, 'parental_units_father', true);
 	
 	//get the possible matches for parents based on gender
-	$male_relatives = divide_the_genders_by_id(male);
-	$female_relatives = divide_the_genders_by_id(female);
+	$male_relatives 	= divide_the_genders_by_id(male);
+	$female_relatives 	= divide_the_genders_by_id(female);
 
 	echo '<label for="parental_units"></label>';	
 	echo '<p>Mother</p>';			
