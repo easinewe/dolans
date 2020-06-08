@@ -1,27 +1,54 @@
 <?php get_header(); ?>
 
-	<div id="post_content">
-    <header>
-        <?php if (have_posts()) : while (have_posts()) : the_post(); ?>
+    <?php
+        $id         = get_the_ID();
+        $relative   = get_relatives_by_id($id);
+        $relative   = $relative[0];
+    ?>
 
-            <div class="relative_profile">
-                <?php echo get_the_post_thumbnail();?>
-                <a href="/family_tree"></a>
-            </div>
+    <div id="post_content">
+        <header>
 
-            <h1><?php the_title(); ?></h1>
-            <h2><a href="/map/">Brooklyn, NY</a></h2>
-            <h3>2000 -</h3>
-            <?php the_content(); ?>
+                <div class="relative_profile">
+                    <?php echo $relative['image']; ?>
+                    <a href="/family_tree"></a>
+                </div>
 
-            <?php
-                $post_info = get_post();
-                var_dump($post_info);
+                <h1>
+                    <?php echo $relative['name_first']; ?>
+                    <?php echo ($relative['name_middle'])?$relative['name_middle']:''; ?>
+                    <?php echo $relative['name_last']; ?>
+                </h1>
+
+                <h2>
+                    <a href="/family_tree/map/">
+                        <?php echo $relative['location']?>
+                    </a>
+                </h2>
+
+                <h3>
+                    <?php echo $relative['dob']?>
+                    <?php echo ($relative['dod'])?' – '.$relative['dod']:''; ?>
+                </h3>
+
+        </header>
+    </div>
+
+    <!--build a Masonry layout-->
+    <div id="media-gallery" class="grid">
+        <div class="grid-sizer"></div><!--needed for sizing-->
+        <div class="gutter-sizer"></div><!--needed for gutter sizing-->
+
+        <?php
+        $gallery = dolan_get_images();
+        foreach($gallery as $image):
             ?>
-
-        <?php endwhile; ?>
-        <?php endif; ?>
-	</header>
-    </div><!-- .content-area -->
+            <div class="grid-item">
+                <a href="<?= $image['url_lg']; ?>" title="<?= $image['description']; ?>" rel="lightbox">
+                    <img src="<?= $image['url']; ?>">
+                </a>
+            </div>
+        <?php endforeach; ?>
+    </div>
 
 <?php get_footer(); ?>

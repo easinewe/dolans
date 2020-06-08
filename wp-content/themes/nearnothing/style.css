@@ -579,17 +579,19 @@ div.map_pic{
 	box-sizing: border-box;
 }
 .relative_profile > a {
-	background-image: url('images/tree.png');
-	background-size: cover;
-	border: 5.5px solid black;
+	background-image: url('images/clover.svg');
+	background-size: contain;
+	background-repeat: no-repeat;
 	position: absolute;
 	width: 30px;
 	height: 30px;
 	top: 20px;
 	left: calc(50% + 75px);
-	border-radius: 15px;
 }
-
+.relative_profile > a:hover,
+.relative_profile > a:focus {
+	filter: invert(27%) sepia(51%) saturate(2878%) hue-rotate(346deg) brightness(104%) contrast(97%);
+}
 /* Bumper */
 
 .bumper{

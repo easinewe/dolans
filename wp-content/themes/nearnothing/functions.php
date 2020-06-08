@@ -1,59 +1,9 @@
 <?php
 
-	function themeslug_enqueue_style() {
-		if( is_page_template('Map') ){
-			wp_enqueue_style('mapbox_style','https://api.tiles.mapbox.com/mapbox-gl-js/v0.16.0/mapbox-gl.css');
-		}
-	}
-	
-	function themeslug_enqueue_script() {
-		if( is_page_template('Map') ){
-			wp_enqueue_script('mapbox', 'https://api.tiles.mapbox.com/mapbox-gl-js/v0.16.0/mapbox-gl.js');
-		}
-	}
-	
-	function wpdocs_scripts_method() {
-		wp_enqueue_script( 'main', get_stylesheet_directory_uri() . '/js/main.js', array( 'jquery' ) );
-		wp_enqueue_script( 'masonry', get_stylesheet_directory_uri() . '/js/masonry.pkgd.min.js', array( 'jquery' ) );
-		wp_enqueue_script( 'images_loaded', get_stylesheet_directory_uri() . '/js/imagesloaded.pkgd.min.js', array( 'masonry' ) );
-	}
-	
-	function load_mapboxjs_files() {
-		//we can just enqueue the last one because it is dependent on the first
-		wp_register_script('mapbox_js','https://api.mapbox.com/mapbox.js/v2.4.0/mapbox.js');
-		wp_register_script('marker_cluster','https://api.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v0.4.0/leaflet.markercluster.js', array('mapbox_js'));
-	  	wp_enqueue_script( 'clusters', get_stylesheet_directory_uri() . '/js/clusterfuck.js', array( 'marker_cluster' ) );
-
-		if( is_page_template('Map') ){
-			wp_enqueue_script('clusters');
-		}
-	}
-
-	function register_mapbox_js_stylesheets() {
-		  wp_register_style('mapbox_js_css','https://api.mapbox.com/mapbox.js/v2.4.0/mapbox.css');
-		  wp_register_style('marker_cluster_css','https://api.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v0.4.0/MarkerCluster.css');
-		  wp_register_style('marker_cluster_css_def','https://api.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v0.4.0/MarkerCluster.Default.css');
-	}
-
-	function add_mapbox_js_stylesheets(){
-		if ( is_page('map') ){ // using page slug
-		  wp_enqueue_style('mapbox_js_css');
-		  wp_enqueue_style('marker_cluster_css');
-		  wp_enqueue_style('marker_cluster_css_def');
-		}
-	}
-
-	add_action( 'wp_enqueue_scripts', 'themeslug_enqueue_style' );
-	add_action( 'wp_enqueue_scripts', 'themeslug_enqueue_script' );
-	add_action( 'wp_enqueue_scripts', 'wpdocs_scripts_method' );
-	add_action( 'wp_enqueue_scripts', 'load_mapboxjs_files' );
-	add_action( 'init', 'register_mapbox_js_stylesheets' ); // should I use wp_print_styles hook instead?
-	add_action( 'wp_enqueue_scripts', 'add_mapbox_js_stylesheets' );
-
-
 /* sidebar */
-if ( function_exists('register_sidebar') )
-    register_sidebar(array('id' => 'sidebar-1'));
+if ( function_exists('register_sidebar') ) {
+	register_sidebar(array('id' => 'sidebar-1'));
+}
 
 /* nav menus */
 if ( function_exists( 'register_nav_menu' ) ) {
@@ -61,27 +11,60 @@ if ( function_exists( 'register_nav_menu' ) ) {
 	register_nav_menu('footer_nav', __('Footer Navigation Menu'));	
 }
 
-/* automatic feed links */
-add_theme_support('automatic-feed-links');
+/* Enqueue Styles and Scripts */
 
-/* featured image for post*/
-add_theme_support( 'post-thumbnails' );
+function themeslug_enqueue_style() {
+	if( is_page_template('Map') ){
+		wp_enqueue_style('mapbox_style','https://api.tiles.mapbox.com/mapbox-gl-js/v0.16.0/mapbox-gl.css');
+	}
+}
 
+function themeslug_enqueue_script() {
+	if( is_page_template('Map') ){
+		wp_enqueue_script('mapbox', 'https://api.tiles.mapbox.com/mapbox-gl-js/v0.16.0/mapbox-gl.js');
+	}
+}
 
-/* Media Tags for images */
+function wpdocs_scripts_method() {
+	wp_enqueue_script( 'main', get_stylesheet_directory_uri() . '/js/main.js', array( 'jquery' ) );
+	wp_enqueue_script( 'masonry', get_stylesheet_directory_uri() . '/js/masonry.pkgd.min.js', array( 'jquery' ) );
+	wp_enqueue_script( 'images_loaded', get_stylesheet_directory_uri() . '/js/imagesloaded.pkgd.min.js', array( 'masonry' ) );
+}
+
+function load_mapboxjs_files() {
+	//we can just enqueue the last one because it is dependent on the first
+	wp_register_script('mapbox_js','https://api.mapbox.com/mapbox.js/v2.4.0/mapbox.js');
+	wp_register_script('marker_cluster','https://api.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v0.4.0/leaflet.markercluster.js', array('mapbox_js'));
+	wp_enqueue_script( 'clusters', get_stylesheet_directory_uri() . '/js/clusterfuck.js', array( 'marker_cluster' ) );
+
+	if( is_page_template('Map') ){
+		wp_enqueue_script('clusters');
+	}
+}
+
+function register_mapbox_js_stylesheets() {
+	wp_register_style('mapbox_js_css','https://api.mapbox.com/mapbox.js/v2.4.0/mapbox.css');
+	wp_register_style('marker_cluster_css','https://api.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v0.4.0/MarkerCluster.css');
+	wp_register_style('marker_cluster_css_def','https://api.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v0.4.0/MarkerCluster.Default.css');
+}
+
+function add_mapbox_js_stylesheets(){
+	if ( is_page('map') ){ // using page slug
+		wp_enqueue_style('mapbox_js_css');
+		wp_enqueue_style('marker_cluster_css');
+		wp_enqueue_style('marker_cluster_css_def');
+	}
+}
+
 function wptp_add_tags_to_attachments() {
         register_taxonomy_for_object_type( 'post_tag', 'attachment' );
     }
-    add_action( 'init' , 'wptp_add_tags_to_attachments' );
 
-
-
-/*GET THE IMAGES*/
 function get_images_from_media_library($total) {
     $args = array(
-        'post_type' => 'attachment',
-        'post_mime_type' =>'image',
-        'post_status' => 'inherit',
+        'post_type' 		=> 'attachment',
+        'post_mime_type' 	=>'image',
+        'post_status' 		=> 'inherit',
 		'meta_query' => array(
 			array(
 			 'key' 		=> '_fp_checkbox',
@@ -89,9 +72,9 @@ function get_images_from_media_library($total) {
 			 'compare' 	=> '='
 			)
 		),
-		'posts_per_page' => ($total)?$total:-1,
-		'numberposts' => ($total)?$total:-1,
-        'orderby' => 'random'
+		'posts_per_page' 	=> ($total)?$total:-1,
+		'numberposts' 		=> ($total)?$total:-1,
+        'orderby' 			=> 'random',
     );
     $query_images = new WP_Query( $args );
     $images = array();
@@ -99,10 +82,8 @@ function get_images_from_media_library($total) {
         $images[]= $image->ID;
     }
     return $images;
-	//var_dump($images);
 }
 
-/*SHOW THE IMAGES*/
 function display_images_from_media_library() {
 
 	$imgs = get_images_from_media_library();
@@ -124,7 +105,6 @@ function display_images_from_media_library() {
 				$html .= $image_link_description;
 			}
 	}
-	
 
 	//return $html;
 	var_dump($imgs);
@@ -138,20 +118,20 @@ function dolan_get_images(){
 		$image 			= get_post($img_id);
 		$image_src 	  	= wp_get_attachment_image_src($img_id, 'medium');
 		$image_src_lg 	= wp_get_attachment_image_src($img_id, 'large');
+		$exclude		= get_post_meta($img_id, '_exclusion_checkbox', true);
 
 		$output[] = array(
 			'id' 			=> $img_id,
 			'url'			=> $image_src[0],
 			'url_lg'		=> $image_src_lg[0],
 			'description'	=> $image->post_content,
+			'exclude'		=> $exclude,
 		);
 	}
 
 	return $output;
 }
 
-
-/*SHOW THE FRONT PAGE IMAGES*/
 function display_frontpage_images_from_media_library($image_size) {
 	
 	//example: display_frontpage_images_from_media_library('xlarge');
@@ -176,7 +156,6 @@ function display_frontpage_images_from_media_library($image_size) {
 	return $fp_image_array[0];
 }
 
-
 //creating a table to save 'who is in this picture' data
 
 register_activation_hook( __FILE__, 'my_plugin_create_db' );
@@ -198,10 +177,6 @@ function my_plugin_create_db() {
 	require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 	dbDelta( $sql );
 }
-
-
-
-
 
 function divide_the_genders($gender) {
 $args = array(
@@ -307,12 +282,13 @@ function dolan_get_posts($category_slug = null){
 
 }
 
-
-function get_relatives_by_id() {
+//get info for each relative
+function get_relatives_by_id($relative_id = null) {
 	$output = array();
 
 	$args = array(
 		'post_type' 		=> 'relative',
+		'p'          		=> ($relative_id)?$relative_id:'',
 		'orderby' 			=> 'title',
 		'order'   			=> 'ASC',
 		'posts_per_page' 	=> -1,
@@ -325,9 +301,17 @@ function get_relatives_by_id() {
 		foreach( $relatives as $rel ) {
 			$id = $rel->ID;
 			$output[] = array(
-				"id"		=> 	$id,
-				"name" 		=>  get_post_meta( $id, 'relative_name_first', true ),
-				"name_last" =>  get_post_meta( $id, 'relative_name_last', true ),
+				"id"			=> $id,
+				"name_first" 	=> get_post_meta( $id, 'relative_name_first', true ),
+				"name_middle" 	=> get_post_meta( $id, 'relative_name_middle', true ),
+				"name_last" 	=> get_post_meta( $id, 'relative_name_last', true ),
+				"image"			=> get_the_post_thumbnail($id),
+				"location"		=> get_post_meta( $id, 'relative_location_city', true ),
+				"dob"           => get_post_meta( $id, 'relative_birth_dob', true ),
+				"dod"			=> get_post_meta( $id, 'relative_birth_dod', true ),
+				"father"		=> get_post_meta( $id, 'parental_units_father', true ),
+				"mother"		=> get_post_meta( $id, 'parental_units_mother', true ),
+				"partner"		=> get_post_meta( $id, 'spouse', true ),
 			);
 		}
 	}
@@ -335,8 +319,7 @@ function get_relatives_by_id() {
 	return $output;
 }
 
-/////*GET MAP DATA*/////
-
+/* GET MAP DATA */
 function get_family_map_data() {
 				  
 				  $args = array(
@@ -469,8 +452,6 @@ function save_map_cluster_data() {
 	fclose($fp);
 }
 
-
-
 /* CUSTOM POST TYPES */
 function my_custom_post_relatives() {
   $labels = array(
@@ -500,11 +481,7 @@ function my_custom_post_relatives() {
   register_post_type( 'relative', $args ); 
 }
 
-add_action( 'init', 'my_custom_post_relatives' );
-
-
 /* CUSTOM TAXONOMIES */
-
 function my_taxonomies_relatives() {
   $labels = array(
     'name'              => _x( 'Relative Categories', 'taxonomy general name' ),
@@ -526,11 +503,7 @@ function my_taxonomies_relatives() {
   register_taxonomy( 'relative_category', 'relative', $args );
 }
 
-add_action( 'init', 'my_taxonomies_relatives', 0 );
 /* DEFINE META BOX: NAME */
-
-add_action( 'add_meta_boxes', 'relative_name_box' );
-
 function relative_name_box() {
     add_meta_box( 
         'relative_name_box',
@@ -545,21 +518,23 @@ function relative_name_box() {
 function relative_name_box_content( $post ) {
     wp_nonce_field( plugin_basename( __FILE__ ), 'relative_name_box_content_nonce' );
     $meta_values_first_name = get_post_meta($post->ID, 'relative_name_first', true);
-    $meta_values_last_name = get_post_meta($post->ID, 'relative_name_last', true);
+	$meta_values_middle_name = get_post_meta($post->ID, 'relative_name_middle', true);
+	$meta_values_last_name = get_post_meta($post->ID, 'relative_name_last', true);
 	$meta_values_gender = get_post_meta($post->ID, 'relative_name_gender', true);
 
 
     echo '<label for="relative_name"></label>';
     if($meta_values_first_name != '') {
         echo '<input type="text" id="relative_name_first" name="relative_name_first" placeholder="first name" value="' . $meta_values_first_name . '"/>';
+		echo '<input type="text" id="relative_name_middle" name="relative_name_middle" placeholder="middle name" value="' . $meta_values_middle_name . '"/>';
         echo '<input type="text" id="relative_name_last" name="relative_name_last" placeholder="last name" value="' . $meta_values_last_name . '"/>';
-		echo '<select name="relative_name_gender" id="relative_name_gender">';
-		echo '<option value="male"'. ( $meta_values_gender == 'male' ? ' selected="selected"' : '').'>Male</option>';
-		echo '<option value="female"'. ( $meta_values_gender == 'female' ? ' selected="selected"' : '').'>Female</option>';
+        echo '<select name="relative_name_gender" id="relative_name_gender">';
+			echo '<option value="male"'. ( $meta_values_gender == 'male' ? ' selected="selected"' : '').'>Male</option>';
+			echo '<option value="female"'. ( $meta_values_gender == 'female' ? ' selected="selected"' : '').'>Female</option>';
 		echo '</select>';
-
 	} else {
         echo '<input type="text" id="relative_name_first" name="relative_name_first" placeholder="first name"/>';
+		echo '<input type="text" id="relative_name_middle" name="relative_name_middle" placeholder="middle name"/>';
         echo '<input type="text" id="relative_name_last" name="relative_name_last" placeholder="last name"/>';
 		echo '<select name="relative_name_gender" id="relative_name_gender">';
 		echo '<option value="male"'. ( $meta_values_gender == 'male' ? ' selected="selected"' : '').'>Male</option>';
@@ -567,8 +542,6 @@ function relative_name_box_content( $post ) {
 		echo '</select>';
     }
 }
-
-add_action( 'save_post', 'relative_name_box_save' );
 
 function relative_name_box_save( $post_id ) {
 
@@ -586,23 +559,21 @@ function relative_name_box_save( $post_id ) {
     return;
   }
 
-  $relative_name_first = $_POST['relative_name_first'];
-  update_post_meta( $post_id, 'relative_name_first', $relative_name_first );
-  
-  $relative_name_last = $_POST['relative_name_last'];
-  update_post_meta( $post_id, 'relative_name_last', $relative_name_last );
-  
-  $relative_name_gender = $_POST['relative_name_gender'];
-  update_post_meta( $post_id, 'relative_name_gender', $relative_name_gender );
+	$relative_name_first = $_POST['relative_name_first'];
+	update_post_meta( $post_id, 'relative_name_first', $relative_name_first );
+
+	$relative_name_middle = $_POST['relative_name_middle'];
+	update_post_meta( $post_id, 'relative_name_middle', $relative_name_middle );
+
+	$relative_name_last = $_POST['relative_name_last'];
+	update_post_meta( $post_id, 'relative_name_last', $relative_name_last );
+
+	$relative_name_gender = $_POST['relative_name_gender'];
+	update_post_meta( $post_id, 'relative_name_gender', $relative_name_gender );
 
 }
 
-
-
 /* DEFINE META BOX: LOCATION */
-
-add_action( 'add_meta_boxes', 'relative_location_box' );
-
 function relative_location_box() {
     add_meta_box( 
         'relative_location_box',
@@ -633,9 +604,6 @@ function relative_location_box_content( $post ) {
     }
 }
 
-
-add_action( 'save_post', 'relative_location_box_save' );
-
 function relative_location_box_save( $post_id ) {
 
   if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) 
@@ -662,10 +630,7 @@ function relative_location_box_save( $post_id ) {
 
 }
 
-/* DEFINE META BOX: BIRTHDATES-DEATHDATES */
-
-add_action( 'add_meta_boxes', 'relative_birth_box' );
-
+/* DEFINE META BOX: BIRTH-DEATH DATES */
 function relative_birth_box() {
     add_meta_box( 
         'relative_birth_box',
@@ -693,9 +658,6 @@ function relative_birth_box_content( $post ) {
     }
 }
 
-
-add_action( 'save_post', 'relative_birth_box_save' );
-
 function relative_birth_box_save( $post_id ) {
 
   if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) 
@@ -719,13 +681,7 @@ function relative_birth_box_save( $post_id ) {
 
 }
 
-
-
-
 /* DEFINE META BOX: PARENT SELECTION */
-
-add_action( 'add_meta_boxes', 'parental_units_box' );
-
 function parental_units_box() {
     add_meta_box( 
         'parental_units_box',
@@ -765,8 +721,6 @@ function parental_units_box_content( $post ) {
 	echo'</select>';
 }
 
-add_action( 'save_post', 'parental_units_box_save' );
-
 function parental_units_box_save( $post_id ) {
 
   if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) 
@@ -791,12 +745,7 @@ function parental_units_box_save( $post_id ) {
 
 }
 
-
-
 /* DEFINE META BOX: SPOUSE SELECTION */
-
-add_action( 'add_meta_boxes', 'spouse_box' );
-
 function spouse_box() {
     add_meta_box( 
         'spouse_box',
@@ -808,7 +757,7 @@ function spouse_box() {
     );
 }
 
-// Get Spouse
+//Get Spouse
 function spouse_box_content( $post ) {
     wp_nonce_field( plugin_basename( __FILE__ ), 'spouse_box_content_nonce' );
     $meta_values_spouse = get_post_meta($post->ID, 'spouse', true);
@@ -826,11 +775,9 @@ function spouse_box_content( $post ) {
 
 }
 
-add_action( 'save_post', 'spouse_box_save' );
-
 function spouse_box_save( $post_id ) {
 
-  if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) 
+  if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE )
   return;
 
   if ( !wp_verify_nonce( $_POST['spouse_box_content_nonce'], plugin_basename( __FILE__ ) ) )
@@ -843,17 +790,13 @@ function spouse_box_save( $post_id ) {
     if ( !current_user_can( 'edit_post', $post_id ) )
     return;
   }
-  
+
   $spouse = $_POST['spouse'];
   update_post_meta( $post_id, 'spouse', $spouse );
 
 }
 
-
-
-///*** FRONT PAGE IMAGES SELECT ***///
-// Add select box to determine if image should be shown on front page...
-
+//Add select box to determine if image should be shown on front page...
 function attachment_frontpage_checkbox($form_fields, $post) {
 	
 	// get the current value of our custom field
@@ -878,23 +821,15 @@ function attachment_frontpage_checkbox($form_fields, $post) {
 		
 }
 
-add_filter("attachment_fields_to_edit", "attachment_frontpage_checkbox", null, 2);
-
-//save the selection
+//Save the selection
 function attachment_frontpage_checkbox_save($post, $attachment) {
 	if( isset($attachment['fp_checkbox']) ){
 		update_post_meta($post['ID'], '_fp_checkbox', $attachment['fp_checkbox']);
 	}
 	return $post;
 }
-add_filter("attachment_fields_to_save", "attachment_frontpage_checkbox_save", null, 2);
 
-///*** END FRONT PAGE IMAGES SELECT ***///
-
-
-///*** EXCLUDE IMAGES FROM MEDIA GALLERY ***///
-// Add select box to determine if image should be shown in gallery...
-
+//Add select box to determine if image should be shown in gallery...
 function attachment_exclusion_checkbox($form_fields, $post) {
 	
 	// get the current value of our custom field
@@ -919,19 +854,13 @@ function attachment_exclusion_checkbox($form_fields, $post) {
 		
 }
 
-add_filter("attachment_fields_to_edit", "attachment_exclusion_checkbox", null, 2);
-
-//save the selection
+//Save the selection
 function attachment_exclusion_checkbox_save($post, $attachment) {
 	if( isset($attachment['exclusion_checkbox']) ){
 		update_post_meta($post['ID'], '_exclusion_checkbox', $attachment['exclusion_checkbox']);
 	}
 	return $post;
 }
-add_filter("attachment_fields_to_save", "attachment_exclusion_checkbox_save", null, 2);
-
-///*** END IMAGE EXCLUSION SELECT ***///
-
 
 function wptp_register_attachments_tax() {
  
@@ -957,29 +886,13 @@ register_taxonomy( 'document-category', 'attachment',
  
  
 }
-add_action( 'init', 'wptp_register_attachments_tax', 0 );
 
-	// Redirect to home after logout
-	function go_home(){
-		wp_redirect( home_url() );
-		exit();
-	}
-	add_action('wp_logout','go_home');
+//Redirect to home after logout
+function go_home(){
+	wp_redirect( home_url() );
+	exit();
+}
 
-/* ======================================================= 
-	ADD SUPPORT
-======================================================= */
-
-// Add image sizes
-	if ( function_exists( 'add_image_size' ) ) { 
-		add_image_size( 'thumbnail_s', 108, 108, array( 'center', 'center' ) );
-		add_image_size( 'thumbnail_l', 225, 225, array( 'center', 'center' ) );
-		add_image_size( 'thumbnail_xl', 340, 340, array( 'center', 'center' ) );
-	}
-
-//add columns to wp list table:	https://wordpress.org/support/topic/manage_posts_custom_column-not-working
-  
-add_filter('manage_edit-relative_columns', 'relative_edit_columns');
 function relative_edit_columns($columns){
 	$columns = array(
 		'cb' => '<input type="checkbox" />',
@@ -991,7 +904,6 @@ function relative_edit_columns($columns){
 	return $columns;
 }
 
-add_action('manage_posts_custom_column', 'relative_custom_columns');
 function relative_custom_columns($column){
 	global $post;
 	switch ($column){
@@ -1004,9 +916,102 @@ function relative_custom_columns($column){
 		case 'location':
 			echo get_post_meta( $post->ID  , 'relative_location_city' , true );
 			break;
-			
+
 	}
 }
 
+//Change the post name of all post to fix permalink issue with Anna Maria
+function update_all_post_names(){
+	$args = array(
+		'post_type' 		=> 'relative',
+		'orderby' 			=> 'title',
+		'order'   			=> 'ASC',
+		'posts_per_page' 	=> -1,
+		'numberposts' 		=> -1,
+
+	);
+
+	$men = get_posts( $args );
+
+	if( $men ) {
+		foreach( $men as $man ) {
+			$post_id = $man->ID;
+			update_post_name($post_id);
+		}
+	}
+
+}
+
+function update_post_name($post_id){
+	// Update post 115
+
+	$title = get_the_title($post_id);
+	$title = strtolower($title);
+	//Make alphanumeric (removes all other characters)
+	$title = preg_replace("/[^a-z0-9_\s-]/", "", $title);
+	//Clean up multiple dashes or whitespaces
+	$title = preg_replace("/[\s-]+/", " ", $title);
+	//Convert whitespaces and underscore to dash
+	$title = preg_replace("/[\s_]/", "-", $title);
+
+	$my_post = array(
+		'ID'           	=> $post_id,
+		'post_name'   	=> $title,
+	);
+
+	// Update the post into the database
+	wp_update_post( $my_post );
+
+}
+
+/* ACTIONS */
+
+add_action( 'add_meta_boxes', 				'relative_location_box' );
+add_action( 'add_meta_boxes', 				'parental_units_box' );
+add_action( 'add_meta_boxes', 				'spouse_box' );
+add_action( 'add_meta_boxes', 				'relative_name_box' );
+add_action( 'add_meta_boxes', 				'relative_birth_box' );
+add_action( 'init', 						'my_taxonomies_relatives', 0 );
+add_action( 'init' , 						'wptp_add_tags_to_attachments' );
+add_action( 'init', 						'register_mapbox_js_stylesheets' ); // should I use wp_print_styles hook instead?
+add_action( 'init', 						'wptp_register_attachments_tax', 0 );
+add_action( 'init', 						'my_custom_post_relatives' );
+add_action( 'manage_posts_custom_column', 	'relative_custom_columns');
+add_action( 'save_post', 					'relative_location_box_save' );
+add_action( 'save_post', 					'relative_name_box_save' );
+add_action( 'save_post', 					'spouse_box_save' );
+add_action( 'save_post', 					'parental_units_box_save' );
+add_action( 'save_post', 					'relative_birth_box_save' );
+add_action( 'wp_enqueue_scripts', 			'themeslug_enqueue_style' );
+add_action( 'wp_enqueue_scripts', 			'themeslug_enqueue_script' );
+add_action( 'wp_enqueue_scripts', 			'wpdocs_scripts_method' );
+add_action( 'wp_enqueue_scripts', 			'load_mapboxjs_files' );
+add_action( 'wp_enqueue_scripts', 			'add_mapbox_js_stylesheets' );
+add_action( 'wp_logout',					'go_home');
+
+/* FILTERS */
+
+add_filter("attachment_fields_to_edit", 	'attachment_exclusion_checkbox', null, 2);
+add_filter("attachment_fields_to_edit", 	'attachment_frontpage_checkbox', null, 2);
+add_filter("attachment_fields_to_save", 	'attachment_exclusion_checkbox_save', null, 2);
+add_filter("attachment_fields_to_save", 	'attachment_frontpage_checkbox_save', null, 2);
+add_filter('manage_edit-relative_columns', 	'relative_edit_columns');
+
+/* =======================================================
+	ADD SUPPORT
+======================================================= */
+
+/* automatic feed links */
+add_theme_support('automatic-feed-links');
+
+/* featured image for post*/
+add_theme_support( 'post-thumbnails' );
+
+// Add image sizes
+if ( function_exists( 'add_image_size' ) ) {
+		add_image_size( 'thumbnail_s', 108, 108, array( 'center', 'center' ) );
+		add_image_size( 'thumbnail_l', 225, 225, array( 'center', 'center' ) );
+		add_image_size( 'thumbnail_xl', 340, 340, array( 'center', 'center' ) );
+	}
 
 ?>

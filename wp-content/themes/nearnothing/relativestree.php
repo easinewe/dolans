@@ -14,11 +14,11 @@
 
 <?php
     $args = array(
-      'post_type' => 'relative',
-	  "posts_per_page" => -1,
-	  'numberposts' => -1,
-	  'orderby' => 'meta_value',
-	  'meta_key' => 'relative_birth_dob',
+      'post_type'       => 'relative',
+	  'posts_per_page'  => -1,
+	  'numberposts'     => -1,
+	  'orderby'         => 'meta_value',
+	  'meta_key'        => 'relative_birth_dob',
 	  'order'   		=> 'ASC',
     );
 
@@ -26,15 +26,15 @@
 	$fam_list_2 = array();
 	$non_blood = array();
   
-  //start building the arrays
+    //start building the arrays
 	$relatives = new WP_Query( $args );
 	if( $relatives->have_posts() ) {
 	  while( $relatives->have_posts() ) {
 		$relatives->the_post();
 		
-		$relative_id = get_the_ID(); 
-		$father = get_post_meta( get_the_ID(), 'parental_units_father', true ); 
-		$mother = get_post_meta( get_the_ID(), 'parental_units_mother', true );
+		$relative_id    = get_the_ID();
+		$father         = get_post_meta( get_the_ID(), 'parental_units_father', true );
+		$mother         = get_post_meta( get_the_ID(), 'parental_units_mother', true );
 	
 	  //no parents listed, keep track in the non-blood array	
 	  if( $mother == 'none' && $father == 'none' ){
@@ -73,25 +73,22 @@
 
 
 
-  <!--<div id='content'>-->
-    <div id="family_tree">
-	  
 
 
-	  <?php 
-	  	$fam_multi = array();
-		foreach ($fam_list_1 as $family_member){
+	  <?php $fam_multi = array();
 
-	
-		  $father = get_post_meta( $family_member, 'parental_units_father', true ); 
-		  //$father = ($father == 'none')? 'no father': $father;
-		  $mother = get_post_meta( $family_member, 'parental_units_mother', true );
-		  //$mother = ($mother == 'none')? 'no mother': $mother;
-		  $spouse_id = get_post_meta( $family_member, 'spouse', true );
-		  $spouse_first = get_post_meta( $spouse_id, 'relative_name_first', true );
-		  $spouse_last = get_post_meta( $spouse_id, 'relative_name_last', true );
-		  $spouse_name = $spouse_first.' '.$spouse_last;
-		  $spouse_gender = get_post_meta( $spouse_id, 'relative_name_gender', true );
+	    foreach ($fam_list_1 as $family_member){
+
+	      $id               = get_the_ID();
+		  $father           = get_post_meta( $family_member, 'parental_units_father', true );
+		  //$father         = ($father == 'none')? 'no father': $father;
+		  $mother           = get_post_meta( $family_member, 'parental_units_mother', true );
+		  //$mother         = ($mother == 'none')? 'no mother': $mother;
+		  $spouse_id        = get_post_meta( $family_member, 'spouse', true );
+		  $spouse_first     = get_post_meta( $spouse_id, 'relative_name_first', true );
+		  $spouse_last      = get_post_meta( $spouse_id, 'relative_name_last', true );
+		  $spouse_name      = $spouse_first.' '.$spouse_last;
+		  $spouse_gender    = get_post_meta( $spouse_id, 'relative_name_gender', true );
 
 		  $connected_by_marriage = 'no';
 		  
@@ -128,101 +125,99 @@
 				$connected_by_marriage = 'yes';
 			  }	
 		  
-		  $first_name = get_post_meta( $family_member, 'relative_name_first', true );
-		  $last_name = get_post_meta( $family_member, 'relative_name_last', true );
-		  $full_name = $first_name.' '.$last_name;
-		  $gender = get_post_meta( $family_member, 'relative_name_gender', true );
-		  $lat = get_post_meta( $family_member, 'relative_location_lat', true );
-		  $long = get_post_meta( $family_member, 'relative_location_long', true );
-		  $dob = get_post_meta( $family_member, 'relative_birth_dob', true ); 
-
+		  $first_name       = get_post_meta( $family_member, 'relative_name_first', true );
+		  $last_name        = get_post_meta( $family_member, 'relative_name_last', true );
+		  $full_name        = $first_name.' '.$last_name;
+		  $gender           = get_post_meta( $family_member, 'relative_name_gender', true );
+		  $lat              = get_post_meta( $family_member, 'relative_location_lat', true );
+		  $long             = get_post_meta( $family_member, 'relative_location_long', true );
+		  $dob              = get_post_meta( $family_member, 'relative_birth_dob', true );
+		  $single_page      = $id;
 
 		  
 				$fam_multi[$family_member] = array(
-					'id' => $family_member,
-					'first' => $first_name,
-					'last' => $last_name,
-					'full_name' => $full_name,
-					'gender' => $gender,
-					'blood_relative_id' => $blood_relative_id, 
-					'parent_id' => $parent_id, 
-					'father_id' => $father,           
-					'mother_id' => $mother,           
-					'spouse_id' => $spouse_id,
-					'spouse_first' => $spouse_first,
-					'spouse_last' => $spouse_last,
-					'spouse_name' => $spouse_name,
-					'spouse_gender' => $spouse_gender,
+					'id'                    => $family_member,
+					'first'                 => $first_name,
+					'last'                  => $last_name,
+					'full_name'             => $full_name,
+					'gender'                => $gender,
+					'blood_relative_id'     => $blood_relative_id,
+					'parent_id'             => $parent_id,
+					'father_id'             => $father,
+					'mother_id'             => $mother,
+					'spouse_id'             => $spouse_id,
+					'spouse_first'          => $spouse_first,
+					'spouse_last'           => $spouse_last,
+					'spouse_name'           => $spouse_name,
+					'spouse_gender'         => $spouse_gender,
 					'connected_by_marriage' => $connected_by_marriage,
-					'dob' => $dob
-				);	
+					'dob'                   => $dob,
+				);
 		}
 		
-			var_dump('boosh');
-			var_dump($fam_multi);
-		
+
 	  ?>
-      
-	  <?php
-	  //push the married relatives to the front
+
+
+      <?php
+	    //push the married relatives to the front
 		$fam_multi_sorted = array();
 		foreach ($fam_multi as $family_member){
 		  if($family_member['connected_by_marriage'] == 'yes'){
-			array_unshift($fam_multi_sorted, $family_member);
+		      array_unshift($fam_multi_sorted, $family_member);
 		  } else {
-			   array_push($fam_multi_sorted, $family_member);
+		      array_push($fam_multi_sorted, $family_member);
 		  }
 		}
-	  ?> 
-      
+	  ?>
 
-      
-	
-           <?php //learn from this
-		  function make_list_final2($arr){
-				$return .= empty($arr['id'])?'container<br/>':'';
-				$return .= !empty($arr['id'])?'begin'.$arr['id'].'<br/>':'';
-				
-				foreach ($arr as $key => $value){
-						$return .= !is_array($value)? $key.': '.$value.'<br>':'';
-						$return .= is_array($value)? '<br/> '.make_list_final2($value): '';
-				}
-				
-				$return .= empty($arr['id'])?'/container<br/>':'';
-				$return .= !empty($arr['id'])?'end'.$arr['id'].'<br/>':'';
-				
-			return $return;
-		  }
-		   ?>
-           
-           
-           
-           
-		   <?php 
-		  function make_list_final4($arr){
+
+
+
+        <?php ////learn from this
+//		  function make_list_final2($arr){
+//				$return  = empty($arr['id'])?'container<br/>':'';
+//				$return .= !empty($arr['id'])?'begin'.$arr['id'].'<br/>':'';
+//
+//				foreach ($arr as $key => $value){
+//						$return .= !is_array($value)? $key.': '.$value.'<br>':'';
+//						$return .= is_array($value)? '<br/> '.make_list_final2($value): '';
+//				}
+//
+//				$return .= empty($arr['id'])?'/container<br/>':'';
+//				$return .= !empty($arr['id'])?'end'.$arr['id'].'<br/>':'';
+//
+//			return $return;
+//		  }
+//		   ?>
+
+
+
+
+        <?php function make_list_final4($arr){
 				$return .= empty($arr['id'])?'<ul class=c>':'';
 				$return .= ( !empty($arr['id']) && ($arr['connected_by_marriage']=='no') )?'<li>':'';
 
 				foreach ($arr as $key => $value){
 				
-				//case 1: anyone who is a blood relative, we print out their information 		
+				  //case 1: anyone who is a blood relative, we print out their information
 				  $return .= ( !is_array($value) && $key=='full_name' 
 												&& ($arr['connected_by_marriage']=='no') )? 
-				  '<a href="#" id="'.$arr['id'].'" class="'.$arr['gender'].'" rel="content">
-				  <div class="tree-thumbnail">'.
-					  get_the_post_thumbnail( $arr['id'], 'thumbnail' )
-				  .'</div>
-				  <div class="tree-detail">'.$arr[first].'<br/>'.$arr[last].'</div>
+				  '<a href="'.get_the_permalink($arr['id']).'" id="'.$arr['id'].'" class="'.$arr['gender'].'" rel="content">
+                      <div class="tree-thumbnail">'.
+                          get_the_post_thumbnail( $arr['id'], 'thumbnail' )
+                      .'</div>
+                      <div class="tree-detail">'.$arr['first'].'<br/>'.$arr['last'].'</div>
 				  </a>':
 				  '';
 				  
-				//case 2: anyone who is a blood relative, AND has a spouse, we print out the SPOUSES information 		
-				  $return .= ( !is_array($value) && $key=='full_name' 
-				  								&& ($arr['connected_by_marriage']=='no') 
-												&& ( !empty($arr['spouse_id']) ) )
-												&& ( $arr['spouse_id']!='none' )? 
+				  //case 2: anyone who is a blood relative, AND has a spouse, we print out the SPOUSES information
+				  $return .= ( !is_array($value) &&   $key=='full_name'
+				  								 && ( $arr['connected_by_marriage']=='no')
+												 && ( !empty($arr['spouse_id']) ) )
+												 && ( $arr['spouse_id']!='none' )?
 				  '<div class="p1">
-					  <a href="#" id="'.$arr['id'].'" class="'.$arr['spouse_gender'].'" rel="content">
+					  <a href="'.get_the_permalink($arr['spouse_id']).'" id="'.$arr['id'].'" class="'.$arr['spouse_gender'].'" rel="content">
 						<div class="tree-thumbnail">'.
 						get_the_post_thumbnail( $arr['spouse_id'], 'thumbnail' )
 						.'</div>						  
@@ -242,40 +237,36 @@
 		  }
 		   ?>
 
-           
-           
-           
-      <?php
-		$fam_tree = buildTree_blood($fam_multi_sorted);
 
-		
-		echo '<div id="dynamic_family_tree" class="tree"><ul>';
-		$tree_output = make_list_final4($fam_tree);
-		
-		
-		echo $tree_output;
-		//echo '</ul>';
-		echo '</ul></div>'
-	  ?>
-      
-      
+        <div id="family_tree">
+            <div id="dynamic_family_tree" class="tree">
+                <ul>
+                    <?php
+                        $fam_tree     = buildTree_blood($fam_multi_sorted);
+                        $tree_output  = make_list_final4($fam_tree);
+                        echo $tree_output;
+                    ?>
+                </ul>
+            </div>
+        </div>
 
-    </div>
-  <!--</div>-->
-	
-    
-      <script>
-	  
-	  //get the first ul with a class of c"
-      var family_tree_ul = document.getElementsByClassName("c");
-	  var family_tree_ul = family_tree_ul[0];
 
-	  //get the family tree
-	  var family_tree_container = document.getElementById('family_tree');
-      	  
-	  //scroll the family tree to the center to show first family member
-	  var family_tree_half_width = family_tree_ul.offsetWidth/3;
-	  family_tree_container.scrollLeft = family_tree_half_width; 
-      </script>  
-      
 <?php get_footer(); ?>
+
+
+
+<script>
+
+    //get the first ul with a class of c"
+    var family_tree_ul = document.getElementsByClassName("c");
+    var family_tree_ul = family_tree_ul[0];
+
+    //get the family tree
+    var family_tree_container = document.getElementById('family_tree');
+
+    //scroll the family tree to the center to show first family member
+    var family_tree_half_width = family_tree_ul.offsetWidth/3;
+    family_tree_container.scrollLeft = family_tree_half_width;
+
+</script>
+
