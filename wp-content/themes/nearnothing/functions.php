@@ -60,10 +60,10 @@ function wptp_add_tags_to_attachments() {
         register_taxonomy_for_object_type( 'post_tag', 'attachment' );
     }
 
-function get_images_from_media_library($total) {
+function get_images_from_media_library($total = null, $fp_only = null, $order = null) {
     $args = array(
         'post_type' 		=> 'attachment',
-        'post_mime_type' 	=>'image',
+        'post_mime_type' 	=> 'image',
         'post_status' 		=> 'inherit',
 		'meta_query' => array(
 			array(
@@ -110,26 +110,57 @@ function display_images_from_media_library() {
 	var_dump($imgs);
 }
 
-function dolan_get_images(){
+function dolan_get_images($total = NULL, $fp_only = NULL, $order = NULL){
+
+
 	$output = array();
-	$image_ids = get_images_from_media_library();
 
-	foreach($image_ids as $img_id){
-		$image 			= get_post($img_id);
-		$image_src 	  	= wp_get_attachment_image_src($img_id, 'medium');
-		$image_src_lg 	= wp_get_attachment_image_src($img_id, 'large');
-		$exclude		= get_post_meta($img_id, '_exclusion_checkbox', true);
+	$args = array(
+		'post_type' 		=> 'attachment',
+		'post_mime_type' 	=> 'image',
+		'post_status' 		=> 'inherit',
 
-		$output[] = array(
-			'id' 			=> $img_id,
-			'url'			=> $image_src[0],
-			'url_lg'		=> $image_src_lg[0],
-			'description'	=> $image->post_content,
-			'exclude'		=> $exclude,
+		'posts_per_page' 	=> ($total)?$total:-1,
+		'numberposts' 		=> ($total)?$total:-1,
+		'orderby'			=> ($order)?$order:'',
+		'order' 			=> 'ASC',
+	);
+
+	if($fp_only == 1){
+		$args['meta_query'] = array(
+			array(
+				'key' 		=> '_fp_checkbox',
+				'value'   	=> ($fp_only)?1:'',
+				'compare' 	=> '='
+			),
 		);
 	}
 
+	$images = get_posts( $args );
+
+	if( $images ) {
+		foreach( $images as $image ) {
+			$img_id			= $image->ID;
+			$image 			= get_post($img_id);
+			$image_src 	  	= wp_get_attachment_image_src($img_id, 'medium');
+			$image_src_lg 	= wp_get_attachment_image_src($img_id, 'large');
+			$image_src_full = wp_get_attachment_image_src($img_id, 'full');
+			$exclude		= get_post_meta($img_id, '_exclusion_checkbox', true);
+
+			$output[] = array(
+				'id' 			=> $img_id,
+				'url'			=> $image_src[0],
+				'url_lg'		=> $image_src_lg[0],
+				'url_full'		=> $image_src_full[0],
+				'description'	=> $image->post_content,
+				'exclude'		=> $exclude,
+			);
+		}
+
+	}
+
 	return $output;
+
 }
 
 function display_frontpage_images_from_media_library($image_size) {
@@ -144,6 +175,7 @@ function display_frontpage_images_from_media_library($image_size) {
 	foreach($imgs as $img) {
 		
 		$fp_status = get_post_meta($img, '_fp_checkbox', true);
+
 		if( $fp_status == 1){ //CHECK THE FRONT PAGE STATUS
 			$html .= wp_get_attachment_link($img, $image_size);
 			$img_link = wp_get_attachment_url($img);
@@ -270,6 +302,7 @@ function dolan_get_posts($category_slug = null){
 		$id = get_the_ID();
 		$output[] = array(
 			'id' 		=> $id,
+			'image'		=> get_the_post_thumbnail_url($id,'full'),
 			'title'		=> get_the_title($id),
 			'date'		=> get_the_date(),
 			'author'	=> 'the author of this post',

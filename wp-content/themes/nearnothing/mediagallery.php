@@ -12,7 +12,9 @@
 
 <div class="wrap">
 
-    <h1><?php echo get_the_title();?></h1>
+    <header>
+        <h1><?php echo get_the_title();?></h1>
+    </header>
 
     <!--build a Masonry layout-->
     <div id="media-gallery" class="grid">
@@ -20,7 +22,7 @@
         <div class="gutter-sizer"></div><!--needed for gutter sizing-->
 
         <?php
-            $gallery = dolan_get_images();
+            $gallery = dolan_get_images('',1,'');
             foreach($gallery as $image):
         ?>
             <div class="grid-item">
@@ -41,4 +43,4 @@
     </span>
 </div>
 
-<?php /* footer */ get_footer(); ?>
+<?php get_footer(); ?>

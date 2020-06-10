@@ -96,7 +96,7 @@ html {
 }
 .wrap{
 	max-width: 1400px;
-	min-height: 100vh;
+	min-height: calc(100vh - 120px);
 	margin: 0 auto;
 	padding: 0 23px;
 	position: relative;
@@ -115,7 +115,17 @@ html {
 	-o-background-size: cover;
 	background-size: cover;
 	overflow-x: hidden;
-	background-position: center center;
+	background-position: 10% center;
+	z-index: -1;
+}
+#fp_fullscreen_image + span{
+	max-width: 60vw;
+	font-family: 'Lato', sans-serif;
+	color: white;
+	position: fixed;
+	bottom: 20px;
+	left: 20px;
+	z-index: 100;
 }
 h1,h2,h3,h4{
 	font-family: 'Lato', sans-serif;
@@ -197,14 +207,10 @@ body.home #site_title_desktop {
 	z-index: 100;
 }
 
-.body_home > #navigation{
-background: 
-    linear-gradient(
-      to top,
-      rgba(0, 0, 0, 0),
-      rgba(0, 0, 0, 0.6)
-    ),
-    url(skyscrapers.jpg);
+body.home > #navigation{
+	background: linear-gradient(to top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.6));
+	position: fixed;
+	top: 0px;
 }
 
 #navigation ul{
@@ -257,42 +263,14 @@ body.home > #navigation li a {
 	opacity: 0;
 	height: 0px;
 }
-#doormat{
+#doormat {
 	width: 100%;
 	height: 100%;
 	/*background-color: rgba(225, 59, 7, 0.5);*/
 	text-align: center;
 	position: absolute;
-	z-index:-1;
+	z-index: -1;
 }
-#doormat .miniature{
-	font-size: .4em;
-	margin-top: 0vh;
-	line-height: 1em; 
-	display: block;
-}
-.greeting_container{
-	width: 80%;
-	max-width: 800px;
-	position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%,-50%);
-}
-.down_arrow{
-	background-image: url('images/down_arrow.png');
-	margin: 82vh auto 0px auto;
-	width: 100%;
-	height: 70px;
-	position: relative;
-	background-position: 50%;
-	background-repeat: no-repeat;
-}
-.greeting_container a:link,
-.greeting_container a:visited {
-	color: white;
-}
-
 .fullscreen{
 	width: 100vh; 
 	width: 100%; 
@@ -313,29 +291,33 @@ body.home > #navigation li a {
 	transition-property: all;
 	transition-duration: 0.5s;
 }
-.greeting_container:hover .arrow_right h1{
-	margin-left: 50px;
-}
-.greeting_container:hover .arrow_down h1{
-	margin-top: 50px;
-}
-.greeting_container:hover .arrow_left h1{
-	margin-right: 50px;
-}
 #footer{
+	font-family: 'Lato', sans-serif;
+	font-weight: 900;
+	text-transform: uppercase;
 	position: relative;
 	display: block;
 	width: 100%;
-	height: 20px;
 	padding: 20px 25px 20px 25px;
 	text-align: right;
+}
+body.home #footer{
+	position: fixed;
+	bottom: 0px;
+	left: 0px;
+	right: 0px;
+	background: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.6));
+}
+body.home #footer a:link,
+body.home #footer a:visited{
+	color: white;
 }
 #footer ul{
 	float: right;
 }
 #footer li{
 	display: inline-block;
-	padding-left: 30px;
+	padding-left: 20px;
 }
 .body_relatives {
   background: none;
@@ -470,7 +452,31 @@ div.map_pic{
 	width: 150px;
 	height: 150px;
 }
+/* 1.3 - POSTS */
 
+#posts h2{
+	border-top: thin solid black;
+	padding-top: 20px;
+	text-transform: uppercase;
+	display: block;
+}
+#posts ul{
+	margin-bottom: 20px;
+}
+#posts li{
+	width: 33%;
+	float: left;
+	padding: 30px 0px;
+}
+#posts li:first-of-type{
+	width: 100%;
+}
+#posts li:last-of-type{
+	clear: right;
+}
+#posts li img{
+	max-width: 100%;
+}
 
 #content{
   width: 100%;
@@ -654,26 +660,40 @@ div.map_pic{
 .tos-close, .tos-next, .tos-prev{
 	background: none !important;
 }
+/* 1.2: Post Archive */
+
 
 /* //////////Post Content////////// */
-#post_content{
+#post_content p,
+#post_content h1{
 	width: 80%;
-	max-width: 800px;
+	max-width: 700px;
 	margin-right: auto;
 	margin-left: auto;
-	margin-top: 60px;
-	font-size: 1em;
+	margin-top: 40px;
+}
+#post_content img{
+	margin-right: auto;
+	margin-left: auto;
+	width: 100%;
+	height: auto;
+	max-width: 1000px;
+	display: block;
 }
 #post_content h1{
 	color: black;
 	margin-bottom: 3rem;
 	font-size: 5rem;
-	line-height: 5rem;
+	line-height: 6rem;
+	text-align: center;
 }
 #post_content p{
 	font-size: 2rem;
 	line-height: 3rem;
 	margin-bottom: 1rem;
+}
+#post_content a:link{
+	text-decoration: underline;
 }
 .post_date {
 	font-family: 'Lato', sans-serif;

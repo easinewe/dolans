@@ -1,7 +1,7 @@
 <?php get_header(); ?>
 <?php $post_categories = dolan_get_categories(); ?>
 
-    <div id="post_content">
+    <div id="posts" class="wrap">
         <!--show each post by category-->
         <?php foreach($post_categories as $cat): ?>
             <?php
@@ -14,6 +14,7 @@
                        <li>
                             <a href="<?= $post['link']; ?>">
                                 <div class="post_date"><?= $post['date']; ?></div>
+                                <img src="<?= $post['image']; ?>">
                                 <h2><?= $post['title']; ?></h2>
                             </a>
                         </li>

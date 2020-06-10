@@ -1,9 +1,14 @@
 <div id="footer">
-  <ul>
-	<?php wp_nav_menu(array('theme_location' => 'footer_nav')); ?>
-  </ul>
-  <?php wp_footer(); ?>
+    <?php wp_nav_menu(array('theme_location' => 'footer_nav')); ?>
+    <?php wp_footer(); ?>
 </div>
 
 </body>
 </html>
+
+<!-/////////////////////////////////////->
+<!-/////////////////////////////////////->
+<!-//////Developed and Designed by//////->
+<!-/////eamonnfitzmaurice@gmail.com/////->
+<!-/////////////////////////////////////->
+<!-/////////////////////////////////////->
