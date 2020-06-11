@@ -278,20 +278,21 @@ function dolan_get_categories(){
 }
 
 //get posts categorized
-function dolan_get_posts($category_slug = null){
+function dolan_get_posts($post_id = null, $category_slug = null){
 
 	$output = array();
 
 	$args = array(
-		'numberposts' => -1,
-		'offset' => 0,
-		'category_name' => $category_slug,
-		'category' => 0,
-		'orderby' => 'post_date',
-		'order' => 'DESC',
-		'post_type' => 'post',
-		'post_status' => 'publish',
-		'suppress_filters' => true,
+		'numberposts' 		=> -1,
+		'offset' 			=> 0,
+		'p'          		=> ($post_id)?$post_id:'',
+		'category_name' 	=> $category_slug,
+		'category' 			=> 0,
+		'orderby' 			=> 'post_date',
+		'order' 			=> 'DESC',
+		'post_type' 		=> 'post',
+		'post_status' 		=> 'publish',
+		'suppress_filters' 	=> true,
 	);
 
 	$query = new WP_Query( $args );
@@ -300,14 +301,26 @@ function dolan_get_posts($category_slug = null){
 	while( $query->have_posts() ){
 		$query->the_post();
 		$id = get_the_ID();
+
+		$post_author_id 		= get_post_meta($id, 'post_author_id', true);
+		$author 				= get_relatives_by_id($post_author_id);
+		$author_name			= $author[0]['name_first'].' '.$author[0]['name_last'];
+		$post_author_alt 		= get_post_meta($id, 'post_author_alt', true);
+		$post_author_alt_link 	= get_post_meta($id, 'post_author_alt_link', true);
+
+		$image_id				= get_post_thumbnail_id($id);
+
 		$output[] = array(
-			'id' 		=> $id,
-			'image'		=> get_the_post_thumbnail_url($id,'full'),
-			'title'		=> get_the_title($id),
-			'date'		=> get_the_date(),
-			'author'	=> 'the author of this post',
-			'category'  => $category[0]->name,
-			'link'		=> get_the_permalink(),
+			'id' 			=> $id,
+			'image'			=> get_the_post_thumbnail_url($id,'full'),
+			'image_caption' => wp_get_attachment_caption($image_id),
+			'title'			=> get_the_title($id),
+			'date'			=> get_the_date(),
+			'author'		=> ($post_author_alt)?$post_author_alt:$author_name,
+			'author_link' 	=> ($post_author_alt_link)?$post_author_alt_link:get_the_permalink($post_author_id),
+			'category'  	=> $category[0]->name,
+			'link'			=> get_the_permalink(),
+			'next_id'		=> '',
 		);
 	}
 
@@ -778,6 +791,68 @@ function parental_units_box_save( $post_id ) {
 
 }
 
+/* DEFINE META BOX: POST AUTHOR */
+function post_author_box() {
+	add_meta_box(
+		'post_author_box',
+		__( 'Post Author', 'myplugin_textdomain' ),
+		'post_author_box_content',
+		'post',
+		'side',
+		'high'
+	);
+}
+
+function post_author_box_content( $post ) {
+
+	wp_nonce_field( plugin_basename( __FILE__ ), 'post_author_box_content_nonce' );
+	$post_author_id 		= get_post_meta($post->ID, 'post_author_id', true);
+	$post_author_alt 		= get_post_meta($post->ID, 'post_author_alt', true);
+	$post_author_alt_link 	= get_post_meta($post->ID, 'post_author_alt_link', true);
+
+	$relatives = get_relatives_by_id();
+
+	echo '<label for="post_author"></label>';
+	echo '<select name="post_author_id" id="post_author_id">';
+		echo '<option value="none"'. ( ($post_author_id == 'none')? 'selected="selected"' : '').'>Select Author</option>';
+		foreach($relatives as $relative){
+			echo '<option value="'. $relative['id'] . '"' . ( ($relative['id'] == $post_author_id)? 'selected="selected"' : ''). '>'. $relative['name_first'].' '.$relative['name_last'] .'</option>';
+		}
+	echo '</select>';
+	echo '<br/><br/>';
+
+	echo '<input type="text" id="post_author_alt" name="post_author_alt" placeholder="alt author name" value="' . $post_author_alt . '"/>';
+	echo '<br/><br/>';
+	echo '<input type="text" id="post_author_alt_link" name="post_author_alt_link" placeholder="optional author link" value="' . $post_author_alt_link . '"/>';
+
+}
+
+function post_author_box_save( $post_id ) {
+
+	if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE )
+		return;
+
+	if ( !wp_verify_nonce( $_POST['post_author_box_content_nonce'], plugin_basename( __FILE__ ) ) )
+		return;
+
+	if ( 'page' == $_POST['post_type'] ) {
+		if ( !current_user_can( 'edit_page', $post_id ) )
+			return;
+	} else {
+		if ( !current_user_can( 'edit_post', $post_id ) )
+			return;
+	}
+
+	$post_author_id 		= $_POST['post_author_id'];
+	$post_author_alt 		= $_POST['post_author_alt'];
+	$post_author_alt_link 	= $_POST['post_author_alt_link'];
+
+	update_post_meta( $post_id, 'post_author_id', 		$post_author_id );
+	update_post_meta( $post_id, 'post_author_alt', 		$post_author_alt );
+	update_post_meta( $post_id, 'post_author_alt_link', 	$post_author_alt_link );
+
+}
+
 /* DEFINE META BOX: SPOUSE SELECTION */
 function spouse_box() {
     add_meta_box( 
@@ -802,7 +877,7 @@ function spouse_box_content( $post ) {
 	echo '<select name="spouse" id="spouse">';
 	echo '<option value="none"'. ( ($meta_values_spouse == 'none')? 'selected="selected"' : '').'>NA</option>';
 		foreach($relatives as $relative){
-		  echo '<option value="'. $relative['id'] .'"'. ( ($relative['id'] == $meta_values_spouse)? 'selected="selected"' : '').'>'. $relative['name'].' '.$relative['name_last'] .'</option>';
+		  echo '<option value="'. $relative['id'] .'"'. ( ($relative['id'] == $meta_values_spouse)? 'selected="selected"' : '').'>'. $relative['name_first'].' '.$relative['name_last'] .'</option>';
 		}
 	echo'</select>';
 
@@ -953,7 +1028,7 @@ function relative_custom_columns($column){
 	}
 }
 
-//Change the post name of all post to fix permalink issue with Anna Maria
+//Change the post name of all posts to fix permalink issue with Anna Maria
 function update_all_post_names(){
 	$args = array(
 		'post_type' 		=> 'relative',
@@ -1001,6 +1076,7 @@ function update_post_name($post_id){
 
 add_action( 'add_meta_boxes', 				'relative_location_box' );
 add_action( 'add_meta_boxes', 				'parental_units_box' );
+add_action( 'add_meta_boxes', 				'post_author_box' );
 add_action( 'add_meta_boxes', 				'spouse_box' );
 add_action( 'add_meta_boxes', 				'relative_name_box' );
 add_action( 'add_meta_boxes', 				'relative_birth_box' );
@@ -1014,6 +1090,7 @@ add_action( 'save_post', 					'relative_location_box_save' );
 add_action( 'save_post', 					'relative_name_box_save' );
 add_action( 'save_post', 					'spouse_box_save' );
 add_action( 'save_post', 					'parental_units_box_save' );
+add_action( 'save_post', 					'post_author_box_save' );
 add_action( 'save_post', 					'relative_birth_box_save' );
 add_action( 'wp_enqueue_scripts', 			'themeslug_enqueue_style' );
 add_action( 'wp_enqueue_scripts', 			'themeslug_enqueue_script' );

@@ -1,27 +1,30 @@
 <?php get_header(); ?>
 <?php $post_categories = dolan_get_categories(); ?>
 
-    <div id="posts" class="wrap">
-        <!--show each post by category-->
-        <?php foreach($post_categories as $cat): ?>
-            <?php
-                $posts = dolan_get_posts($cat['slug']);
-                if($posts):
-            ?>
-                <h2><?= $cat['name']; ?></h2>
-                <ul>
-                    <?php foreach ($posts as $post): ?>
-                       <li>
-                            <a href="<?= $post['link']; ?>">
-                                <div class="post_date"><?= $post['date']; ?></div>
-                                <img src="<?= $post['image']; ?>">
-                                <h2><?= $post['title']; ?></h2>
-                            </a>
-                        </li>
-                    <?php endforeach; ?>
-                </ul>
-            <?php endif; ?>
-        <?php endforeach; ?>
-    </div>
+        <div id="posts" class="wrap full">
+            <!--show each post by category-->
+            <?php foreach($post_categories as $cat): ?>
+                <?php
+                    $posts = dolan_get_posts('',$cat['slug']);
+                    if($posts):
+                ?>
+                        <section>
+                            <h2><?= $cat['name']; ?></h2>
+                            <ul>
+                            <?php foreach ($posts as $post): ?>
+                               <li>
+                                    <a href="<?= $post['link']; ?>">
+                                        <img src="<?= $post['image']; ?>">
+                                        <h3><?= $post['title']; ?></h3>
+                                        <div class="post_date"><?= date('F Y', strtotime($post['date'])); ?></div>
+                                        <address class="author"><?= $post['author']; ?></address>
+                                    </a>
+                                </li>
+                            <?php endforeach; ?>
+                            </ul>
+                        </section>
+                <?php endif; ?>
+            <?php endforeach; ?>
+        </div>
 
 <?php get_footer(); ?>

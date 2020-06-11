@@ -67,15 +67,11 @@ em {
 }
 html {
 	font-size: 62.5%;
-	}
-body { font-size: 1.4rem; } /* =14px */
-h1{
-	font-size: 2.4rem; /* =24px */
-	line-height: 2rem;
-	color: black;
+	/* 0.625 * 16 = 10 */
 }
-
-
+body {
+	font-size: 1.4rem;
+} /* =14px */
 body {
 	font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
 	color: #000;
@@ -100,6 +96,9 @@ html {
 	margin: 0 auto;
 	padding: 0 23px;
 	position: relative;
+}
+.wrap.full{
+	padding: 0px;
 }
 #wpadminbar {
   z-index: 99999 !important;
@@ -147,13 +146,13 @@ h4{
 	font-size: 1.75em;
 	line-height: 1.25em;
 }
+strong{
+	font-weight: 600;
+}
 header{
 	text-align: center;
 }
-
 .current_page_item {
-	/*text-decoration: underline !important;*/
-	color: white !important;
 	border-bottom: 5px solid #000000;
 }
 #logo{
@@ -202,9 +201,13 @@ body.home #site_title_desktop {
 #navigation{
 	width: 100%;
 	box-sizing: border-box;
-	padding: 0px 30px 0px 25px;
+	padding: 0px 30px 0px 30px;
 	height: 8rem;
 	z-index: 100;
+}
+#navigation,
+.wrap.full{
+	max-width: 1500px;
 }
 
 body.home > #navigation{
@@ -298,7 +301,7 @@ body.home > #navigation li a {
 	position: relative;
 	display: block;
 	width: 100%;
-	padding: 20px 25px 20px 25px;
+	padding: 20px 25px 25px 25px;
 	text-align: right;
 }
 body.home #footer{
@@ -453,30 +456,56 @@ div.map_pic{
 	height: 150px;
 }
 /* 1.3 - POSTS */
-
-#posts h2{
-	border-top: thin solid black;
-	padding-top: 20px;
-	text-transform: uppercase;
-	display: block;
+#posts section{
+	width: 100%;
+	padding: 15px;
 }
-#posts ul{
+
+#posts section ul {
+	display: flex;
+	flex-wrap: wrap;
 	margin-bottom: 20px;
 }
-#posts li{
-	width: 33%;
-	float: left;
-	padding: 30px 0px;
+#posts section ul li {
+	width: 33.3%;
+	padding: 30px 15px;
+	box-sizing: border-box;
+	display: block;
+	display: inline-flex;
+	flex-wrap: wrap;
+	/*background-color: green;*/
 }
-#posts li:first-of-type{
+#posts li:first-of-type {
 	width: 100%;
-}
-#posts li:last-of-type{
-	clear: right;
 }
 #posts li img{
 	max-width: 100%;
 }
+#posts h2{
+	width: calc(100% - 30px);
+	border-top: thin solid black;
+	padding: 10px 0px;
+	margin: 20px auto 20px auto;
+	text-transform: uppercase;
+	display: block;
+}
+#posts h3{
+	margin-top: 20px;
+}
+#posts li:first-of-type h3{
+	font-size: 2.5em;
+}
+.author,
+.post_date{
+	font-family: 'Lato', sans-serif;
+	line-height: 20px;
+	display: inline;
+}
+.author:before{
+	content: ' | ';
+	color: gray;
+}
+
 
 #content{
   width: 100%;
@@ -605,9 +634,17 @@ div.map_pic{
 	padding: 5vw;
 	display: table;
 	width: 100vw;
-	color: white;
+	color: rgb(254, 254, 244);
 }
+.bumper h4{
+	font-size: 2.75em;
+}
+body.blog .bumper h4:before{
+	content: 'Next: ';
+	font-weight: 600;
+ }
 .bumper span{
+	font-weight: 300;
 	padding: 0px 5vw;
 	display: table-cell;
 	vertical-align: middle;
@@ -616,10 +653,18 @@ div.map_pic{
 	max-width: 31.3vw;
 	height: auto;
 }
-.green{
+.green,
+a.next_post.green + #footer {
 	background-color: #659A3F;
 }
-
+a.next_post.green + #footer a:link,
+a.next_post.green + #footer a:visited{
+	color: rgb(254, 254, 244);
+}
+a.next_post:hover > div,
+a.next_post:hover + #footer{
+	background-color: black;
+}
 /* Masonry Gallery */
 
 #media-gallery .grid-item img{
@@ -663,75 +708,75 @@ div.map_pic{
 /* 1.2: Post Archive */
 
 
-/* //////////Post Content////////// */
+/* 1.3: Post Content */
+#post_content{
+	font-size: 2rem;
+	line-height: 3rem;
+}
 #post_content p,
-#post_content h1{
+#post_content h1,
+#post_content ol{
 	width: 80%;
 	max-width: 700px;
 	margin-right: auto;
 	margin-left: auto;
 	margin-top: 40px;
 }
-#post_content img{
+#featured_image{
+	text-align: center;
+}
+#featured_image > div{
 	margin-right: auto;
 	margin-left: auto;
+	display: inline-block;
+}
+figcaption{
+	font-size: 1.5rem;
+	line-height: 3em;
+	text-align: left;
+}
+#post_content img{
 	width: 100%;
 	height: auto;
 	max-width: 1000px;
-	display: block;
 }
 #post_content h1{
 	color: black;
-	margin-bottom: 3rem;
+	margin-bottom: 2rem;
 	font-size: 5rem;
 	line-height: 6rem;
 	text-align: center;
 }
-#post_content p{
-	font-size: 2rem;
-	line-height: 3rem;
-	margin-bottom: 1rem;
-}
 #post_content a:link{
 	text-decoration: underline;
 }
-.post_date {
-	font-family: 'Lato', sans-serif;
-	font-weight: 700;
-	line-height: 1.25rem;
-	margin-bottom: 0.5rem;
+#post_content a.author:link{
+	text-decoration: none;
 }
-/* //////////Reunion Page////////// */
-.body_reunion {
-  background: url('http://dolansofcavan.com/wp-content/uploads/2016/04/slieve.jpg') no-repeat center top fixed; 
-  background-opacity: 0.2;
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
-  background-size: cover;
-}
-
-.announcement {
-	color: white;
-	position: fixed;
-	top: 0px;
-	bottom: 0px;
-	left: 0px;
-	right: 0px;
-	height: auto;
-	padding: 20%; 
-	background-color: rgba(152, 29, 70, 0.75);
-	margin-right: auto;
-	margin-left: auto;
+body.single a.author:link{
+	display: block;
+	margin-bottom: 30px;
 	text-align: center;
 }
-/*#footer{
-	position: fixed;
-	bottom: 10px;
-	right: 30px;
-	text-transform: uppercase;
-	font-size: .25rem;
-}*/
+body.single a.author:hover{
+	text-decoration: underline;
+}
+body.single .author:before{
+	content: 'by ';
+	color: black;
+}
+body.single .post_date{
+	display: block;
+}
+#post_content p {
+	margin-bottom: 1rem;
+}
+#post_content ol li{
+	list-style: decimal;
+	margin-bottom: 1.5rem;
+	margin-left: 40px;
+}
+
 /* //////////Mobile Styles////////// */
 @media (max-width: 980px) {
 h1{
@@ -892,7 +937,6 @@ body.home > #navigation li a {
 	font-size: 1.75rem;
 	line-height: 2.5rem;
 }
-
 
 }
 @media (max-width: 580px) {

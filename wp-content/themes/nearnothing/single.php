@@ -1,25 +1,49 @@
 <?php get_header(); ?>
+<?php
+    $post_info = dolan_get_posts($post->ID);
+    $next = get_next_post(0,[$post->ID]);
+?>
 
 	<div id="post_content">
 
 			<?php if (have_posts()) : while (have_posts()) : the_post(); ?>
             
              <h1><?php the_title(); ?></h1>
-             <?= the_post_thumbnail(); ?>
-			 <?php the_content(); ?>
-             
-			 <?php //echo get_the_date(); ?>
-            
+
+                <?php if($post_info[0]['author']): ?>
+                    <a href="<?= $post_info[0]['author_link']; ?>" class="author"><?= $post_info[0]['author']; ?></a>
+                <?php endif; ?>
+
+                <?php if($post_info[0]['image']): ?>
+                    <div id="featured_image">
+                        <div>
+                            <img src="<?= $post_info[0]['image']; ?>">
+                            <?php if($post_info[0]['image_caption']): ?>
+                                <figcaption>
+                                    <?= $post_info[0]['image_caption']; ?>
+                                </figcaption>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                <?php endif; ?>
+
+                <p class="post_date"><?= date('F Y', strtotime($post_info[0]['date'])); ?></p>
+
+                <?php the_content(); ?>
+
             <?php endwhile; ?>
             <?php endif; ?>
 	
-    </div><!-- .content-area -->
+    </div>
 
-<div class="bumper green">
-    <?php echo get_the_post_thumbnail();?>
-    <span>
-        <h2>Next: <?php echo get_post_field('post_title', $post->ID); ?></h2>
-    </span>
-</div>
+    <!--NEXT-->
+    <a class="next_post green" href="<?= $next->guid; ?>">
+        <div class="bumper green">
+            <?php echo get_the_post_thumbnail($next->ID); ?>
+            <span>
+                <h4><?= $next->post_title; ?></h4>
+            </span>
+        </div>
+    </a>
 
 <?php get_footer(); ?>
