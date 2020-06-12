@@ -10,7 +10,7 @@
             
              <h1><?php the_title(); ?></h1>
 
-                <?php if($post_info[0]['author']): ?>
+                <?php if($post_info[0]['author_id']): ?>
                     <a href="<?= $post_info[0]['author_link']; ?>" class="author"><?= $post_info[0]['author']; ?></a>
                 <?php endif; ?>
 
@@ -27,9 +27,10 @@
                     </div>
                 <?php endif; ?>
 
-                <p class="post_date"><?= date('F Y', strtotime($post_info[0]['date'])); ?></p>
-
-                <?php the_content(); ?>
+                <div id="content">
+                    <p class="post_date"><?= date('F Y', strtotime($post_info[0]['date'])); ?></p>
+                    <?php the_content(); ?>
+                </div>
 
             <?php endwhile; ?>
             <?php endif; ?>

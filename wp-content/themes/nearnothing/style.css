@@ -383,6 +383,7 @@ body.home #footer a:visited{
 	left: 0;
 	position: absolute !important;
 	bottom: 0;
+	z-index: -1;
 }
 #map.reduced {
 	width: 200px;
@@ -456,11 +457,10 @@ div.map_pic{
 	height: 150px;
 }
 /* 1.3 - POSTS */
-#posts section{
+#posts section {
 	width: 100%;
 	padding: 15px;
 }
-
 #posts section ul {
 	display: flex;
 	flex-wrap: wrap;
@@ -505,7 +505,13 @@ div.map_pic{
 	content: ' | ';
 	color: gray;
 }
-
+#posts a:link{
+	transition: opacity .25s linear;
+	opacity: 1.0;
+}
+#posts a:hover{
+	opacity: 0.8;
+}
 
 #content{
   width: 100%;
@@ -643,8 +649,14 @@ body.blog .bumper h4:before{
 	content: 'Next: ';
 	font-weight: 600;
  }
+.bumper p{
+	margin-top: 20px;
+	font-size: 1.75em;
+	line-height: 1.25em;
+	font-family: 'Lato', sans-serif;
+	font-weight: 700;
+}
 .bumper span{
-	font-weight: 300;
 	padding: 0px 5vw;
 	display: table-cell;
 	vertical-align: middle;
@@ -705,21 +717,22 @@ a.next_post:hover + #footer{
 .tos-close, .tos-next, .tos-prev{
 	background: none !important;
 }
-/* 1.2: Post Archive */
-
 
 /* 1.3: Post Content */
-#post_content{
+#post_content {
 	font-size: 2rem;
 	line-height: 3rem;
 }
-#post_content p,
-#post_content h1,
-#post_content ol{
+#content{
 	width: 80%;
 	max-width: 700px;
 	margin-right: auto;
 	margin-left: auto;
+}
+#content p,
+#content h1,
+#content ol,
+#content{
 	margin-top: 40px;
 }
 #featured_image{

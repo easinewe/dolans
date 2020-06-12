@@ -6,7 +6,7 @@
         $relative   = $relative[0];
     ?>
 
-    <div id="post_content">
+    <div>
         <header>
 
                 <div class="relative_profile">
@@ -27,8 +27,13 @@
                 </h2>
 
                 <h3>
-                    <?php echo $relative['dob']?>
-                    <?php echo ($relative['dod'])?' – '.$relative['dod']:''; ?>
+                    <?php
+                    if($relative['dod']){
+                        echo ($relative['dod'])?' – '.$relative['dod']:'';
+                    }else{
+                        echo 'b.'.$relative['dob'];
+                    }
+                    ?>
                 </h3>
 
         </header>
@@ -44,8 +49,8 @@
         foreach($gallery as $image):
             ?>
             <div class="grid-item">
-                <a href="<?= $image['url_lg']; ?>" title="<?= $image['description']; ?>" rel="lightbox">
-                    <img src="<?= $image['url']; ?>">
+                <a href="<?= $image['url_full']; ?>" title="<?= $image['description']; ?>" rel="lightbox">
+                    <img src="<?= $image['url_lg']; ?>">
                 </a>
             </div>
         <?php endforeach; ?>

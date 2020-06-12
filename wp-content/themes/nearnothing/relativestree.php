@@ -90,6 +90,9 @@
 		  $spouse_name      = $spouse_first.' '.$spouse_last;
 		  $spouse_gender    = get_post_meta( $spouse_id, 'relative_name_gender', true );
 
+		  $oldest_male_id   = 70;
+          $oldest_female_id = 69;
+
 		  $connected_by_marriage = 'no';
 		  
 			  //determine who the blood connection is inherited from
@@ -111,7 +114,7 @@
 				$parent_id = 'none';
 				$blood_relative_id = $father;
 			  }
-			  //this is the oldest know Male relative: Gerald
+			  //this is the oldest know Male relative: James
 			  if( $family_member == 70 ){
 				$parent_id = 'none';
 				$blood_relative_id = 'none';
@@ -195,7 +198,7 @@
 
 
         <?php function make_list_final4($arr){
-				$return .= empty($arr['id'])?'<ul class=c>':'';
+				$return = empty($arr['id'])?'<ul class=c>':'';
 				$return .= ( !empty($arr['id']) && ($arr['connected_by_marriage']=='no') )?'<li>':'';
 
 				foreach ($arr as $key => $value){
@@ -235,7 +238,7 @@
 
 			return $return;
 		  }
-		   ?>
+        ?>
 
 
         <div id="family_tree">

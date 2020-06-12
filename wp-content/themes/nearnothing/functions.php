@@ -140,19 +140,20 @@ function dolan_get_images($total = NULL, $fp_only = NULL, $order = NULL){
 
 	if( $images ) {
 		foreach( $images as $image ) {
-			$img_id			= $image->ID;
-			$image 			= get_post($img_id);
-			$image_src 	  	= wp_get_attachment_image_src($img_id, 'medium');
-			$image_src_lg 	= wp_get_attachment_image_src($img_id, 'large');
-			$image_src_full = wp_get_attachment_image_src($img_id, 'full');
-			$exclude		= get_post_meta($img_id, '_exclusion_checkbox', true);
+			$img_id				= $image->ID;
+			$image 				= get_post($img_id);
+			$image_src 	  		= wp_get_attachment_image_src($img_id, 'medium');
+			$image_src_lg 		= wp_get_attachment_image_src($img_id, 'large');
+			$image_src_full 	= wp_get_attachment_image_src($img_id, 'full');
+			$image_description	= ($image->post_content)?$image->post_content:'';
+			$exclude			= get_post_meta($img_id, '_exclusion_checkbox', true);
 
 			$output[] = array(
 				'id' 			=> $img_id,
 				'url'			=> $image_src[0],
 				'url_lg'		=> $image_src_lg[0],
 				'url_full'		=> $image_src_full[0],
-				'description'	=> $image->post_content,
+				'description'	=> $image_description,
 				'exclude'		=> $exclude,
 			);
 		}
@@ -264,7 +265,11 @@ function divide_the_genders_by_id($gender) {
 function dolan_get_categories(){
 
 	$output = array();
-	$categories = get_categories();
+	$args = array(
+		'order' 			=> 'DESC',
+	);
+
+	$categories = get_categories($args);
 
 	foreach( $categories as $category ){
 		$output[] = array(
@@ -316,6 +321,7 @@ function dolan_get_posts($post_id = null, $category_slug = null){
 			'image_caption' => wp_get_attachment_caption($image_id),
 			'title'			=> get_the_title($id),
 			'date'			=> get_the_date(),
+			'author_id'		=> $post_author_id,
 			'author'		=> ($post_author_alt)?$post_author_alt:$author_name,
 			'author_link' 	=> ($post_author_alt_link)?$post_author_alt_link:get_the_permalink($post_author_id),
 			'category'  	=> $category[0]->name,
@@ -818,6 +824,7 @@ function post_author_box_content( $post ) {
 		foreach($relatives as $relative){
 			echo '<option value="'. $relative['id'] . '"' . ( ($relative['id'] == $post_author_id)? 'selected="selected"' : ''). '>'. $relative['name_first'].' '.$relative['name_last'] .'</option>';
 		}
+	echo '<option value="0"'. ( ($post_author_id == '0')? 'selected="selected"' : '').'>NA</option>';
 	echo '</select>';
 	echo '<br/><br/>';
 

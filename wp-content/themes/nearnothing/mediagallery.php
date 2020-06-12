@@ -36,12 +36,12 @@
     </div><!-- end wrap -->
 
     <!--BUMPER-->
-    <a class="next_post green" href="mailto:eamonnfitzmaurice@gmail.com">
+    <a class="next_post green" href="mailto:eamonnfitzmaurice@gmail.com?subject=Dolans of Cavan: Photo Submission"">
         <div class="bumper green">
             <?php echo get_the_post_thumbnail();?>
             <span>
-                <!--<h4><?php //get_post_field('post_content', $post->ID); ?></h4>-->
-                <h4>Want to submit a photo?<br/>Log in or contact me here.</h4>
+                <?= '<span>'.get_the_content('','',$post->ID).'</span>'; ?>
+                <!--<h4>Want to submit a photo?<br/>Log in or contact me here.</h4>-->
             </span>
         </div>
     </a>

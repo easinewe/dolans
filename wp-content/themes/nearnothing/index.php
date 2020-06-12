@@ -17,7 +17,9 @@
                                         <img src="<?= $post['image']; ?>">
                                         <h3><?= $post['title']; ?></h3>
                                         <div class="post_date"><?= date('F Y', strtotime($post['date'])); ?></div>
-                                        <address class="author"><?= $post['author']; ?></address>
+                                        <?php if($post['author_id']):?>
+                                            <address class="author"><?= $post['author']; ?></address>
+                                        <?php endif; ?>
                                     </a>
                                 </li>
                             <?php endforeach; ?>
