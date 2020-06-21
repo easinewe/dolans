@@ -639,6 +639,7 @@ div.map_pic{
 	margin-top: 5vw;
 	padding: 5vw;
 	display: table;
+	position: relative;
 	width: 100vw;
 	color: rgb(254, 254, 244);
 }
@@ -665,6 +666,9 @@ body.blog .bumper h4:before{
 	max-width: 31.3vw;
 	height: auto;
 }
+a.next_post .bumper{
+	position: relative;
+}
 .green,
 a.next_post.green + #footer {
 	background-color: #659A3F;
@@ -676,6 +680,17 @@ a.next_post.green + #footer a:visited{
 a.next_post:hover > div,
 a.next_post:hover + #footer{
 	background-color: black;
+}
+a.next_post .bumper:after{
+	content: '>';
+	display: block;
+	position: absolute;
+	right: 0px;
+	top: calc(50% - 100px);
+	color: red;
+	width: 50px;
+	height: 200px;
+	background-color: yellow;
 }
 /* Masonry Gallery */
 

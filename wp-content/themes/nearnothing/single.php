@@ -1,7 +1,7 @@
 <?php get_header(); ?>
 <?php
     $post_info = dolan_get_posts($post->ID);
-    $next = get_next_post(0,[$post->ID]);
+    $next = dolan_get_next_post($post->ID);
 ?>
 
 	<div id="post_content">
@@ -37,12 +37,13 @@
 	
     </div>
 
+
     <!--NEXT-->
-    <a class="next_post green" href="<?= $next->guid; ?>">
+    <a class="next_post green" href="<?= get_the_permalink($next); ?>">
         <div class="bumper green">
-            <?php echo get_the_post_thumbnail($next->ID); ?>
+            <?= get_the_post_thumbnail($next); ?>
             <span>
-                <h4><?= $next->post_title; ?></h4>
+                <h4><?= get_the_title($next); ?></h4>
             </span>
         </div>
     </a>

@@ -305,14 +305,13 @@ function dolan_get_posts($post_id = null, $category_slug = null){
 	// fill the array
 	while( $query->have_posts() ){
 		$query->the_post();
-		$id = get_the_ID();
 
+		$id 					= get_the_ID();
 		$post_author_id 		= get_post_meta($id, 'post_author_id', true);
 		$author 				= get_relatives_by_id($post_author_id);
 		$author_name			= $author[0]['name_first'].' '.$author[0]['name_last'];
 		$post_author_alt 		= get_post_meta($id, 'post_author_alt', true);
 		$post_author_alt_link 	= get_post_meta($id, 'post_author_alt_link', true);
-
 		$image_id				= get_post_thumbnail_id($id);
 
 		$output[] = array(
@@ -332,6 +331,29 @@ function dolan_get_posts($post_id = null, $category_slug = null){
 
 	return $output;
 
+}
+
+//get the next categorized post
+function dolan_get_next_post($post_id){
+	$order = array();
+
+	$post_categories = dolan_get_categories();
+
+	foreach($post_categories as $cat) {
+	$posts = dolan_get_posts('', $cat['slug']);
+		if ($posts){
+			foreach ($posts as $post){
+				$order[] = $post['id'];
+			}
+		}
+	}
+
+	//if we are on last go to first
+	$next = array_search($post_id, $order);
+	$next = $next + 1;
+	$next = ($next >= (count($order)) )?$order[0]:$order[$next];
+
+	return $next;
 }
 
 //get info for each relative
@@ -369,6 +391,10 @@ function get_relatives_by_id($relative_id = null) {
 	}
 
 	return $output;
+}
+
+function dolan_find_parents(){
+	return 'some';
 }
 
 /* GET MAP DATA */
@@ -864,7 +890,7 @@ function post_author_box_save( $post_id ) {
 function spouse_box() {
     add_meta_box( 
         'spouse_box',
-        __( 'Spouse', 'myplugin_textdomain' ),
+        __( 'Partner', 'myplugin_textdomain' ),
         'spouse_box_content',
         'relative',
         'side',
