@@ -374,18 +374,22 @@ function get_relatives_by_id($relative_id = null) {
 	if( $relatives ) {
 		foreach( $relatives as $rel ) {
 			$id = $rel->ID;
+			$children = dolan_find_children($id);
 			$output[] = array(
 				"id"			=> $id,
 				"name_first" 	=> get_post_meta( $id, 'relative_name_first', true ),
 				"name_middle" 	=> get_post_meta( $id, 'relative_name_middle', true ),
 				"name_last" 	=> get_post_meta( $id, 'relative_name_last', true ),
-				"image"			=> get_the_post_thumbnail($id),
+				"thumbnail"		=> get_the_post_thumbnail($id),
+				"url"			=> get_the_permalink($id),
+				"gender"        => get_post_meta( $id, 'relative_name_gender', true ),
 				"location"		=> get_post_meta( $id, 'relative_location_city', true ),
 				"dob"           => get_post_meta( $id, 'relative_birth_dob', true ),
 				"dod"			=> get_post_meta( $id, 'relative_birth_dod', true ),
 				"father"		=> get_post_meta( $id, 'parental_units_father', true ),
 				"mother"		=> get_post_meta( $id, 'parental_units_mother', true ),
 				"partner"		=> get_post_meta( $id, 'spouse', true ),
+				"children"		=> $children,
 			);
 		}
 	}
@@ -393,8 +397,34 @@ function get_relatives_by_id($relative_id = null) {
 	return $output;
 }
 
-function dolan_find_parents(){
-	return 'some';
+//get array of child ids
+function dolan_find_children($relative_id){
+
+	$output = array();
+	$args = array(
+		'post_type' 		=> 'relative',
+		'orderby' 			=> 'title',
+		'order'   			=> 'ASC',
+		'posts_per_page' 	=> -1,
+		'numberposts' 		=> -1,
+	);
+
+	$family = get_posts( $args );
+
+	if( $family ) {
+		foreach( $family as $fam ){
+			$id		= $fam->ID;
+			$mother = get_post_meta( $id, 'parental_units_mother', true );
+			$father = get_post_meta( $id, 'parental_units_father', true );
+
+			if( ($mother == $relative_id ) || ($father == $relative_id) ) {
+				array_push($output, $id);
+			}
+
+		}
+	}
+
+	return $output;
 }
 
 /* GET MAP DATA */
@@ -890,7 +920,7 @@ function post_author_box_save( $post_id ) {
 function spouse_box() {
     add_meta_box( 
         'spouse_box',
-        __( 'Partner', 'myplugin_textdomain' ),
+        __( 'Partner(s)', 'myplugin_textdomain' ),
         'spouse_box_content',
         'relative',
         'side',
@@ -902,18 +932,44 @@ function spouse_box() {
 function spouse_box_content( $post ) {
     wp_nonce_field( plugin_basename( __FILE__ ), 'spouse_box_content_nonce' );
     $meta_values_spouse = get_post_meta($post->ID, 'spouse', true);
-	
+
+	//fix for previous option of only one partner/spouse
+    if( is_string($meta_values_spouse) ){
+		$meta_values_spouse = explode(' ', $meta_values_spouse);
+	}
+
 	//get the possible matches for parents based on gender
 	$relatives = get_relatives_by_id();
 
-	echo '<label for="spouse"></label>';	
-	echo '<select name="spouse" id="spouse">';
-	echo '<option value="none"'. ( ($meta_values_spouse == 'none')? 'selected="selected"' : '').'>NA</option>';
-		foreach($relatives as $relative){
-		  echo '<option value="'. $relative['id'] .'"'. ( ($relative['id'] == $meta_values_spouse)? 'selected="selected"' : '').'>'. $relative['name_first'].' '.$relative['name_last'] .'</option>';
-		}
-	echo'</select>';
+	$partner_no = 1;
 
+	//repeating fields
+	foreach($meta_values_spouse as $spouse) {
+		if ( $spouse != '') {
+			echo '<label for="spouse"></label>';
+			echo '<select name="spouse[]" id="spouse-'.$partner_no.'">';
+				echo '<option value="">Remove this contributor</option>';
+				echo '<option value="none"' . (($spouse == 'none') ? 'selected="selected"' : '') . '>NA</option>';
+				foreach ($relatives as $relative) {
+					echo '<option value="' . $relative['id'] . '"' . (($relative['id'] == $spouse) ? 'selected="selected"' : '') . '>' . $relative['name_first'] . ' ' . $relative['name_last'] . '</option>';
+				}
+			echo '</select><br/><br/>';
+
+			$partner_no++;
+		}
+	}
+
+	//initial field if last value of array is not none
+	if( end($meta_values_spouse) != 'none') {
+		echo '<label for="spouse"></label>';
+		echo '<select name="spouse[]" id="spouse' . $partner_no . '">';
+		echo '<option value="">Add a partner</option>';
+		echo '<option value="none">NA</option>';
+		foreach ($relatives as $relative) {
+			echo '<option value="' . $relative['id'] . '">' . $relative['name_first'] . ' ' . $relative['name_last'] . '</option>';
+		}
+		echo '</select>';
+	}
 }
 
 function spouse_box_save( $post_id ) {
@@ -931,6 +987,7 @@ function spouse_box_save( $post_id ) {
     if ( !current_user_can( 'edit_post', $post_id ) )
     return;
   }
+
 
   $spouse = $_POST['spouse'];
   update_post_meta( $post_id, 'spouse', $spouse );

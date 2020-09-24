@@ -46,10 +46,10 @@ if($pagename == 'map'){
 
 <body <?php body_class($body_class); ?>>
   
-  <div id="navigation">
-    <a href="<?php echo get_home_url(); ?>">
+  <div id="navigation" class="green">
+    <!--<a href="<?php echo get_home_url(); ?>">
       <div id="logo"><?php bloginfo('name'); ?></div>
-    </a>
+    </a>-->
     <div id="site_title_desktop">The Dolan Family</div>
     <div id="site_title"><?php echo ( ( is_front_page() )? 'Dolan' : $pagename ); ?></div>
     <div id="hamburger_menu"></div>

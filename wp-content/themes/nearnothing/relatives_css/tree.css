@@ -114,8 +114,7 @@ right connector from last child*/
 .p1
 {
 	display:table;
-	margin:0px auto;
-	background-color: cornflowerblue;
+	margin:0 auto;
 }
 	
 .p1::before
@@ -189,7 +188,7 @@ right connector from last child*/
 
 /*Time for some hover effects*/
 /*We will apply the hover effect the the lineage of the element also*/
-.tree li a.male:hover { background: #c8e4f8; color: #000; border: 1px solid #94a0b4; }	
+.tree li a.male:hover { background: #c8e4f8; color: #000; border: 1px solid #94a0b4; }
 .tree li a.female:hover { background: #ffc0cb; color: #000; border: 1px solid #94a0b4; }	
 
 .tree li a:hover+ul li a.male { background: #c8e4fb; color: #000; border: 1px solid #94a0b4; }	
@@ -217,6 +216,7 @@ Thanks :)*/
 	margin:0px auto 4px auto;
 	width:50px;
 	height:50px;
+	background-color: white;
 }
 
 .tree a.female .tree-thumbnail

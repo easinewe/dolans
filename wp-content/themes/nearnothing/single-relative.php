@@ -10,7 +10,7 @@
         <header>
 
                 <div class="relative_profile">
-                    <?php echo $relative['image']; ?>
+                    <?php echo $relative['thumbnail']; ?>
                     <a href="/family_tree"></a>
                 </div>
 
@@ -35,6 +35,10 @@
                     }
                     ?>
                 </h3>
+                <p>
+
+                    <?php var_dump($relative['children']); ?>
+            <p>
 
         </header>
     </div>

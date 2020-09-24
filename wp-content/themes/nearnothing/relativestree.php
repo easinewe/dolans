@@ -61,10 +61,17 @@ make_list_final4
 
 	    foreach ($fam_list_1 as $family_member){
 
-	      $id               = get_the_ID();
-		  $father           = get_post_meta( $family_member, 'parental_units_father', true );
+          $id               = $family_member;
+
+	      $url              = get_the_permalink($family_member);
+	      $thumbnail        = get_the_post_thumbnail_url( $family_member, 'thumbnail' );
+
+	      $father           = get_post_meta( $family_member, 'parental_units_father', true );
 		  $mother           = get_post_meta( $family_member, 'parental_units_mother', true );
 		  $spouse_id        = get_post_meta( $family_member, 'spouse', true );
+
+		  $spouse_id        = (is_array($spouse_id))?$spouse_id[0]:$spouse_id;
+
 		  $spouse_first     = get_post_meta( $spouse_id, 'relative_name_first', true );
 		  $spouse_last      = get_post_meta( $spouse_id, 'relative_name_last', true );
 		  $spouse_name      = $spouse_first.' '.$spouse_last;
@@ -126,19 +133,21 @@ make_list_final4
 		  $lat              = get_post_meta( $family_member, 'relative_location_lat', true );
 		  $long             = get_post_meta( $family_member, 'relative_location_long', true );
 		  $dob              = get_post_meta( $family_member, 'relative_birth_dob', true );
-		  $single_page      = $id;
 
-		  
+
 				$fam_multi[$family_member] = array(
-					'id'                    => $family_member,
+					'id'                    => $id,
 					'first'                 => $first_name,
 					'last'                  => $last_name,
 					'full_name'             => $full_name,
-					'gender'                => $gender,
+					'url'                   => $url,
+                    'thumbnail'             => $thumbnail,
+                    'gender'                => $gender,
 					'blood_relative_id'     => $blood_relative_id,
 					'parent_id'             => $parent_id,
 					'father_id'             => $father,
 					'mother_id'             => $mother,
+					'gene_pool_id'          => $father.$mother,
 					'spouse_id'             => $spouse_id,
 					'spouse_first'          => $spouse_first,
 					'spouse_last'           => $spouse_last,
@@ -149,8 +158,6 @@ make_list_final4
 				);
 		}
 		
-
-
 
 	    //push the married relatives to the front
 		foreach ($fam_multi as $family_member){
@@ -205,57 +212,33 @@ make_list_final4
 
         function make_list_final4($arr){
 
-		        $nonBloodParentId = '';
-
 				$output  = empty($arr['id'])?'<ul class=c>':'';
                 $output .= ( !empty($arr['id']) && ($arr['connected_by_marriage']=='no') )?'<li>':'';
 
 				foreach ($arr as $key => $value){
 
-                //get non-blood relative
-                    if($arr['blood_relative_id'] == $arr['mother_id']){
-                        $nonBloodParentId =  $arr['father_id'];
-                    }else{
-                        $nonBloodParentId =  $arr['mother_id'];
+				    //single blood relative
+				    if( (!is_array($value)) && ($key=='full_name') && ($arr['connected_by_marriage']=='no')){
+                $output .= '<a href="'.$arr['url'].'" id="'.$arr['id'].'" class="'.$arr['gender'].'">
+                                <div class="tree-thumbnail"><img src="'.$arr['thumbnail'].'"></div>
+                                <div class="tree-detail">'.$arr['first'].'<br/>'.$arr['last'].'</div>
+				               </a>';
+
+                        //partner
+                        if( !empty($arr['spouse_id']) && ($arr['spouse_id']!='none') ){
+
+                            $output .= '<div class="p1">
+                                    <a href="'.get_the_permalink($arr['spouse_id']).'" id="'.$arr['spouse_id'].'" class="'.$arr['spouse_gender'].'" rel="content">
+                                        <div class="tree-thumbnail">'. get_the_post_thumbnail( $arr['spouse_id'], 'thumbnail' ) .'</div>
+                                        <div class="tree-detail">'.$arr['spouse_first'].'<br/>'.$arr['spouse_last'].'</div>
+                                    </a>
+                                </div>';
+
+
+                        }
+
+
                     }
-
-
-
-				
-              //case 1: anyone who is a blood relative, we print out their information
-                $output .= ( !is_array($value) && $key=='full_name'
-												&& ($arr['connected_by_marriage']=='no') )?
-
-                    '<div class="p1">
-					  <a href="'.get_the_permalink($nonBloodParentId).'" id="'.$nonBloodParentId.'" class="'.$arr['spouse_gender'].'" rel="content">
-						<div class="tree-thumbnail">'.
-                    get_the_post_thumbnail( $nonBloodParentId, 'thumbnail' )
-                    .'</div>						  
-						<div class="tree-detail">'.$arr['mother_first'].'<br/>'.$arr['mother_last'].'</div>
-					  </a>
-				  </div>
-				  <a href="'.get_the_permalink($arr['id']).'" id="'.$arr['id'].'" class="'.$arr['gender'].'" rel="content">
-                      <div class="tree-thumbnail">'.
-                          get_the_post_thumbnail( $arr['id'], 'thumbnail' )
-                      .'</div>
-                      <div class="tree-detail">'.$arr['first'].'<br/>'.$arr['last'].'</div>
-				  </a>':
-				  '';
-				  
-				  //case 2: anyone who is a blood relative, AND has a spouse, we print out the SPOUSES information
-//                    $output .= ( !is_array($value) &&   $key=='full_name'
-//				  								 && ( $arr['connected_by_marriage']=='no')
-//												 && ( !empty($arr['spouse_id']) ) )
-//												 && ( $arr['spouse_id']!='none' )?
-//				  '<div class="p1">
-//					  <a href="'.get_the_permalink($arr['spouse_id']).'" id="'.$arr['id'].'" class="'.$arr['spouse_gender'].'" rel="content">
-//						<div class="tree-thumbnail">'.
-//						get_the_post_thumbnail( $arr['spouse_id'], 'thumbnail' )
-//						.'</div>
-//						<div class="tree-detail">'.$arr['spouse_first'].'<br/>'.$arr['spouse_last'].'</div>
-//					  </a>
-//				  </div>':
-//				  '';
 
 
 

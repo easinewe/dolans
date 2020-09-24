@@ -180,18 +180,16 @@ body.body_home #logo {
 }
 
 #site_title_desktop{
+	color: white;
 	position: absolute;
 	height: 8rem;
 	transition: all 0.5s;
-	left: 9rem;
+	/*left: 9rem;*/
 	font-family: 'Lato', sans-serif;
 	font-weight: 900;
 	text-transform: uppercase;
 	font-size: 1.6rem;
 	line-height: 8rem;
-}
-body.home #site_title_desktop {
-	color: white !important;
 }
 #site_title{
 	display: none;
@@ -204,18 +202,11 @@ body.home #site_title_desktop {
 	padding: 0px 30px 0px 30px;
 	height: 8rem;
 	z-index: 100;
+	margin-bottom: 8rem;
 }
-#navigation,
 .wrap.full{
 	max-width: 1500px;
 }
-
-body.home > #navigation{
-	background: linear-gradient(to top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.6));
-	position: fixed;
-	top: 0px;
-}
-
 #navigation ul{
 	font-family: 'Lato', sans-serif;
 	font-weight: 900;
@@ -240,26 +231,23 @@ body.home > #navigation{
 	height: 25px;
 }
 #navigation li a {
-	color: black; 
+	color: rgb(254, 254, 244);
 	display: block;
 }
-
+body.home #site_title_desktop{
+	color: rgb(254, 254, 244);
+}
 body.home > #navigation li a {
-	color: white; 
+	color: rgb(254, 254, 244);
 	display: block;
 }
 #navigation li a:hover {
-	color: black;
+	color: #FFE77AFF;
 	/*border-top: 10px solid #000000;*/
 }
 .current_page_item a:hover {
 	color: black;
 	border-top: 0px !important;
-}
-
-.body_home #navigation li a:hover,
-.body_reunion #navigation li a:hover {
-	color: white;
 }
 
 #cover-up{
@@ -309,12 +297,53 @@ body.home #footer{
 	bottom: 0px;
 	left: 0px;
 	right: 0px;
-	background: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.6));
 }
 body.home #footer a:link,
 body.home #footer a:visited{
-	color: white;
+	color: #275506;
 }
+
+/*FRONT PAGE SCROLL*/
+body.page-template-front-page-scroll{
+	background-color: #275506;
+}
+body.page-template-front-page-scroll #navigation{
+	background-color: transparent;
+}
+#waterfall{
+	height: calc(100vh - 11rem);
+	overflow: scroll;
+	position: fixed;
+	top: 11rem;
+	right: 0px;
+	left: 0px;
+}
+#waterfall img{
+	position: absolute;
+	max-width: 50vw;
+	opacity: 0;
+	transition: opacity 2s linear;
+}
+
+div.titlebox {
+	height: 100vh;
+	width: 100vw;
+	position: fixed;
+	pointer-events: none;
+}
+div.titlebox h1 {
+	margin: 0;
+	color: rgb(254, 254, 244);
+	font-size: 10vw;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	margin-right: -50%;
+	transform: translate(-50%, -100%);
+	z-index: 1;
+	opacity: 1;
+}
+
 #footer ul{
 	float: right;
 }
@@ -671,7 +700,7 @@ a.next_post .bumper{
 }
 .green,
 a.next_post.green + #footer {
-	background-color: #659A3F;
+	background-color: #275506;
 }
 a.next_post.green + #footer a:link,
 a.next_post.green + #footer a:visited{
@@ -682,15 +711,18 @@ a.next_post:hover + #footer{
 	background-color: black;
 }
 a.next_post .bumper:after{
-	content: '>';
+	content: url('images/forward.png');
 	display: block;
 	position: absolute;
-	right: 0px;
-	top: calc(50% - 100px);
+	right: 75px;
+	top: calc(50% - 53.5px);
 	color: red;
-	width: 50px;
-	height: 200px;
-	background-color: yellow;
+	width: 34px;
+	height: 107px;
+	transition: right 0.25s linear;
+}
+a.next_post:hover > .bumper:after{
+	right: 30px;
 }
 /* Masonry Gallery */
 
@@ -747,7 +779,8 @@ a.next_post .bumper:after{
 #content p,
 #content h1,
 #content ol,
-#content{
+#content figure,
+#content {
 	margin-top: 40px;
 }
 #featured_image{
