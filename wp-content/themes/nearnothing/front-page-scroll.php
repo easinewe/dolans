@@ -30,12 +30,13 @@
             $random		= rand(0,1);
             $rand_size  = ($random)?'medium':'large';
             $rand_z     = ($random)?100:-100;
+            $rate       = ($random)?0.8:1;
             $src 		= wp_get_attachment_image_src((int)$image,$rand_size);
 
             if($src){
-                //ensure first photo is always behind logo
-                $rand_z = ($count == 0)?-1:$rand_z;
-                echo '<img data-count="'.$count.'" src="'.$src[0].'" style="left:50%; z-index:'.$rand_z.'">';
+                echo '<div class="holder '.$rand_size.'" style="z-index:'.$rand_z.'" data-pos=0 data-rate='.$rate.'>';
+                    echo '<img data-count="'.$count.'" src="'.$src[0].'">';
+                echo '</div>';
                 $count++;
             }
 
@@ -49,7 +50,11 @@
         var screen_x  = screen.width,
             screen_y  = screen.height,
             waterfall = document.querySelector('#waterfall'),
-            photos    = Array.prototype.slice.call(waterfall.querySelectorAll('img'));
+            holders   = document.querySelectorAll('.holder'),
+            photos    = Array.prototype.slice.call(waterfall.querySelectorAll('img')),
+            overlap_y = 0.2, //photo overlap amount
+            topStart  = screen_y * 0.5,
+            topPos    = topStart;
 
         //FUNCTIONS
 
@@ -99,29 +104,66 @@
 
         //set random coordinates for image without displaying offscreen
         function arrangePhotos(){
-            var top_start   = screen_y * 0.2, //distance from top to start photos
-                overlap_y   = 0.2;
+
+            var total_img = 0,
+                total_height = 0;
+
 
             photos.forEach(function(photo) {
                 var photo_x = photo.offsetWidth,
                     photo_y = photo.offsetHeight,
                     x_max   = (screen_x/2) - photo_x, //furthest left image can be placed without being offscreen
                     rand_x  = generateRandom(-(screen_x/2), x_max), //random placement from left
-                    overlap = photo.offsetHeight * overlap_y;
+                    overlap = photo.offsetHeight * overlap_y,
+                    parent  = photo.parentNode;
 
-                    console.log("screen_x:" + screen_x + ", photo_x:" + photo_x + ", x_max:" + x_max);
+
+                //console.log("screen_x:" + screen_x + ", photo_x:" + photo_x + ", x_max:" + x_max);
+
 
                 //set photo position
-                photo.style.top         = top_start + 'px';
-                photo.style.marginLeft  = rand_x + 'px';
-                photo.style.opacity     = 1;
-                top_start               = (photo_y + top_start) - overlap;
+                parent.style.top        = topPos + 'px';
+                parent.style.marginLeft = rand_x + 'px';
+                parent.style.opacity    = 1;
+                parent.style.width      = photo_x + 'px';
+                parent.style.height     = photo_y + 'px';
+                topPos                  = (photo_y + topPos) - overlap;
+
+                //set data attribute
+                parent.setAttribute("data-pos", topPos);
+
+                //increment
+                total_height = total_height + photo_y;
+                total_img++;
+
+                //set body height equal to photo heights
+                if(total_img == photos.length){
+                    document.body.style.height = topPos + photo_y;
+                }
+
             });
 
 		}
 
+		//transform Y position of each photo at different rates
+		function scrollPhotos(){
 
-	</script>	
+            holders.forEach(function(holder) {
+                var scrollTop   = window.pageYOffset,
+                    rate        = holder.getAttribute('data-rate'),
+                    translateY  = (scrollTop * rate ).toFixed(2);
+
+                holder.style.webkitTransform = 'translate3d(0px, -'+translateY+'px, 0px)';
+                //console.log(scrollTop);
+            });
+        }
+
+        //onScroll
+        document.getElementsByTagName('body')[0].onscroll = () => {
+            scrollPhotos();
+        };
+
+	</script>
 
 	
 
